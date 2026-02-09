@@ -9,8 +9,8 @@ const listingSchema = new Schema({
     description:String,
     image:{
       type:String,
-      default:"url", // if image is undefined
-       set:(v)=> v === "" // if image link is empty ? "url" : v
+      default:"https://unsplash.com/photos/sunflower-field-during-day-time-lk3F07BN8T8", // if image is undefined
+       set:(v)=> v === "" ? "https://unsplash.com/photos/sunflower-field-during-day-time-lk3F07BN8T8" : v
     },
     price:Number,
     location:String,

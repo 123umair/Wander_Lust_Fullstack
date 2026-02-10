@@ -1,7 +1,7 @@
 import express from 'express'
 import cors from 'cors'
 import mongoose from 'mongoose'
-import {  Listing } from './src/Models/Listing.js'
+import {  Listing } from '../src/models/Listing.js'
 const app = express()
 const port = 4000
 
@@ -10,18 +10,11 @@ app.use(express.urlencoded({extended:true}))
  // means that if any type of data that are urlencoded formate then this middleware easily parse these data inside the req.body for understand the data
  
 
- async function main(){
-      await  mongoose.connect("mongodb://127.0.0.1:27017/wanderLust") 
- }
+ 
 
 
  
   
- main()
- .then(()=>{
-    console.log("Connection Successfull")
- })
-
 
 
  app.get("/itemslisting",async (req,res)=>{

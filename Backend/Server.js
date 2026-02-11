@@ -8,7 +8,8 @@ const port = 4000
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
  // means that if any type of data that are urlencoded formate then this middleware easily parse these data inside the req.body for understand the data
- 
+app.use(cors({origin:"http://localhost:5173"}));
+
 
 async function main(){
       await  mongoose.connect("mongodb://127.0.0.1:27017/wanderLust") 
@@ -21,7 +22,7 @@ main()
 
 app.get("/listings",async(req, res) => {
    const allListings = await Listing.find({})
-   res.send(' ')
+   res.json({allListings})
 })
 
 //  app.get("/itemslisting",async (req,res)=>{

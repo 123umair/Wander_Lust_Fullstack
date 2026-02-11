@@ -7,10 +7,16 @@ const listingSchema = new Schema({
         required : true, }
     ,
     description:String,
-    image:{
-      type:String,
-      default:"https://unsplash.com/photos/sunflower-field-during-day-time-lk3F07BN8T8", // if image is undefined
-       set:(v)=> v === "" ? "https://unsplash.com/photos/sunflower-field-during-day-time-lk3F07BN8T8" : v
+    image: {
+        filename: {
+            type: String,
+            default: "listingimage"
+        },
+        url: {
+            type: String,
+            default: "https://images.unsplash.com/photo-1552733407-5d5c46c3bb3b", // Ek valid default URL
+            set: (v) => v === "" ? "https://images.unsplash.com/photo-1552733407-5d5c46c3bb3b" : v
+        }
     },
     price:Number,
     location:String,

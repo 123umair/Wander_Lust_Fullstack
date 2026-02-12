@@ -20,10 +20,21 @@ main()
     console.log("Connection is successfull")
 })
 
+// Index Route
 app.get("/listings",async(req, res) => {
    const allListings = await Listing.find({})
    res.json({allListings})
 })
+
+
+
+// Show Route
+app.get("/listings/:id", async (req,res)=>{
+   let { id } = req.params
+   const listing = await Listing.findById(id)
+   res.json({listing})
+})
+
 
 //  app.get("/itemslisting",async (req,res)=>{
 //     let sampleListing = new Listing({

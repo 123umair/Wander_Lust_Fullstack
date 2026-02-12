@@ -1,8 +1,12 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import { Link  } from 'react-router'
+
+
 const Display_Listings = () => {
      const [fetchdata, setfetchData] = useState([])
+    //  const { id } = useParams()
   useEffect(() => {
     const fetchPost = async () => {
       try {
@@ -22,7 +26,7 @@ const Display_Listings = () => {
       <p>
        {fetchdata.map((item) => (
         <ul key={item._id} className="p-4 border-b">
-          <li className="font-bold">{item.title}</li>
+          <Link to={`/listings/${item._id}`} className="font-bold">{item.title}</Link>
           <li>{item.description}</li>
         </ul>
         ))}

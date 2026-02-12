@@ -21,7 +21,17 @@ const Display_Content = () => {
     
     return (
     <div>
-     <p>Display_Content</p> 
+     <p>Display_Content</p>
+     {content.map((content)=>
+     { return (
+      <div>
+       <p>{content.title}</p>
+      <p>{content.description}</p>
+      <p>{content.price}</p>
+      <p>{content.location}</p>
+      <p>{content.country}</p>
+      </div>
+     )})} 
 
     </div>
   )

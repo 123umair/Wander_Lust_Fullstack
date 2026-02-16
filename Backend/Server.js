@@ -43,6 +43,12 @@ app.get("/listings/:id", async (req,res)=>{
    res.json({listing})
 })
 
+// Update Route
+app.patch("/listings/:id/edit", async(req,res)=>{
+
+   
+})
+
 //  app.get("/itemslisting",async (req,res)=>{
 //     let sampleListing = new Listing({
 //         title:"Naran,Kaghan valley",

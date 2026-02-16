@@ -26,7 +26,15 @@ app.get("/listings",async(req, res) => {
    res.json({allListings})
 })
 
+// New Route
+app.post("/listings/create_listing",async(req,res)=>{
+//   const  {title,description,price,country,location} = req.body
+// let listing = req.body.listing;
+const newListing = new Listing(req.body.listing)
+await newListing.save()
+res.redirect("http://localhost:5173")
 
+})
 
 // Show Route
 app.get("/listings/:id", async (req,res)=>{
@@ -34,7 +42,6 @@ app.get("/listings/:id", async (req,res)=>{
    const listing = await Listing.findById(id)
    res.json({listing})
 })
-
 
 //  app.get("/itemslisting",async (req,res)=>{
 //     let sampleListing = new Listing({

@@ -9,13 +9,13 @@ const Form = () => {
           <p className="text-gray-500">Fill in the details below to share your place.</p>
         </div>
 
-        <form action="/listing/create" method="POST" className="space-y-6">
+        <form action="http://localhost:4000/listings/create_listing" method="POST" className="space-y-6">
           {/* Title */}
           <div>
             <label htmlFor="title" className="block text-sm font-medium text-gray-700">Title</label>
             <input 
               type="text" 
-              name="title" 
+              name="listing[title]" 
               id="title"
               placeholder="e.g. Cozy Beachfront Cottage" 
               className="mt-1 block w-full px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
@@ -26,7 +26,7 @@ const Form = () => {
           <div>
             <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description</label>
             <textarea 
-              name="description" 
+              name="listing[description]" 
               id="description" 
               rows="4"
               placeholder="Tell us more about the place..."
@@ -39,7 +39,7 @@ const Form = () => {
             <label htmlFor="image" className="block text-sm font-medium text-gray-700">Image URL</label>
             <input 
               type="text" 
-              name="image"
+              name="listing[image]"
               id="image"
               placeholder="https://images.unsplash.com/..." 
               className="mt-1 block w-full px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
@@ -52,7 +52,7 @@ const Form = () => {
               <label htmlFor="price" className="block text-sm font-medium text-gray-700">Price ($)</label>
               <input 
                 type="number" 
-                name="price"
+                name="listing[price]"
                 id="price"
                 placeholder="0.00" 
                 className="mt-1 block w-full px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
@@ -62,7 +62,7 @@ const Form = () => {
               <label htmlFor="country" className="block text-sm font-medium text-gray-700">Country</label>
               <input 
                 type="text" 
-                name="country"
+                name="listing[country]"
                 id="country"
                 placeholder="United States" 
                 className="mt-1 block w-full px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
@@ -75,7 +75,7 @@ const Form = () => {
             <label htmlFor="location" className="block text-sm font-medium text-gray-700">Location</label>
             <input 
               type="text" 
-              name="location"
+              name="listing[location]"
               id="location"
               placeholder="e.g. Malibu, California" 
               className="mt-1 block w-full px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"

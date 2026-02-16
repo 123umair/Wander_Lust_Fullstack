@@ -23,6 +23,7 @@ const Display_Content = () => {
   return (
     <div>
       <p>Display_Content</p>
+    
       {content && (
         <div>
           <p>{content.title}</p>

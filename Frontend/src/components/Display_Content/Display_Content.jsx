@@ -1,11 +1,11 @@
 import React from 'react'
 import axios from 'axios'
 import { useState, useEffect } from 'react'
-import { useParams , Link } from 'react-router-dom'
+import { useParams , Link , useNavigate} from 'react-router-dom'
 const Display_Content = () => {
   const { id } = useParams()
   const [content, setContent] = useState([])
-
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchContent = async () => {
@@ -13,6 +13,7 @@ const Display_Content = () => {
         const res = await axios.get(`http://localhost:4000/listings/${id}`)
         console.log(res,'res')
         setContent(res.data.listing)
+        
       } catch (error) {
         console.log("error", error)
       }
@@ -20,6 +21,20 @@ const Display_Content = () => {
     fetchContent()
   }, [id])
 
+  const handleDelete = async() =>{
+    try {
+     const res = await axios.delete(`http://localhost:4000/listings/${id}`);
+      if (res.status === 200)
+      {
+        alert ("Listing deleted successfully!")
+        navigate("/")
+      }
+    } catch (error) {
+      console.error("Delete error:",error)
+      alert("Failed to delete.")
+      
+    }
+  }
   return (
     <div>
       <p>Display_Content</p>
@@ -40,7 +55,15 @@ const Display_Content = () => {
 </button>
 
    </Link>
+  
+<Link to={`/listings/${content._id}`}>
+   <button 
+   onClick={handleDelete}
+   className="bg-red-600 hover:bg-red-700 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition duration-300 transform hover:-translate-y-1 active:scale-95 cursor-pointer">
+  Delete this Listing
+</button>
 
+   </Link>
     </div>
   )
 }

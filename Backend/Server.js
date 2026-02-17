@@ -63,6 +63,12 @@ app.patch("/listings/:id", async (req, res) => {
    res.json({success:true,message:"Listing Updated Successfully!"})
 });
 
+// Delete Route
+app.delete("/listings/:id", async (req,res) =>{
+   let { id } = req.params
+   await Listing.findByIdAndDelete(id)
+   res.json({success:true,message:"Deleted successfully"})
+})
 
 //  app.get("/itemslisting",async (req,res)=>{
 //     let sampleListing = new Listing({

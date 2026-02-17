@@ -34,7 +34,7 @@ const Display_Content = () => {
         </div>
       )}
 
-    <Link to="/listings/create_listing">
+<Link to={`/listings/${content._id}/edit`}>
    <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2 rounded-lg shadow-md transition duration-300 transform hover:-translate-y-1 active:scale-95 cursor-pointer">
   Edit this Listing
 </button>

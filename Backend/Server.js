@@ -43,11 +43,26 @@ app.get("/listings/:id", async (req,res)=>{
    res.json({listing})
 })
 
-// Update Route
-app.patch("/listings/:id/edit", async(req,res)=>{
-
+// Edit Route
+app.get("/listings/:id/edit", async(req,res)=>{
+   let { id } = req.params;
+   const listing = await Listing.findById(id)
+   res.json({ listing })
    
 })
+
+// Update Route
+app.patch("/listings/:id", async (req, res) => {
+   let { id } = req.params;
+
+    await Listing.findByIdAndUpdate(
+      id,
+      { ...req.body.listing }
+   );
+
+   res.json({success:true,message:"Listing Updated Successfully!"})
+});
+
 
 //  app.get("/itemslisting",async (req,res)=>{
 //     let sampleListing = new Listing({

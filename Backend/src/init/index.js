@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import data from "./data.js";
-import { Listing } from '../models/Listing.js'
+import { Listing } from '../Models/Listing.js'
 
 
 

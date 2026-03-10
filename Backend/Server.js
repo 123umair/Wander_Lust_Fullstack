@@ -32,7 +32,7 @@ app.post("/listings/create_listing",async(req,res)=>{
 // let listing = req.body.listing;
 const newListing = new Listing(req.body.listing)
 await newListing.save()
-res.redirect("http://localhost:5173")
+res.json('success')
 
 })
 

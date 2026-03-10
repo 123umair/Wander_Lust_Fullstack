@@ -78,7 +78,7 @@ const Form = () => {
               placeholder="https://images.unsplash.com/..."
               className="mt-1 block w-full px-4 py-3 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#FF5A5F] focus:border-transparent transition-all"
             />
-            {errors.listing?.image && <p className='text-red-600'>{errors.listing.image.message}</p>}
+            {errors.listing?.image?.url && <p className='text-red-600'>{errors.listing.image.url.message}</p>}
           </div>
 
           {/* Price & Country Row: Responsive Grid */}

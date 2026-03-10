@@ -4,20 +4,20 @@ import axios from 'axios'
 import { Link } from 'react-router-dom' // Ensure this is react-router-dom
 
 const Display_Listings = () => {
+  const API = import.meta.env.VITE_API_URL
   const [fetchdata, setfetchData] = useState([])
 
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const res = await axios.get('http://localhost:4000/listings')
-        console.log('data', res.data.allListings)
+        const res = await axios.get(`${API}/listings`)
         setfetchData(res.data.allListings)
       } catch (error) {
         console.log("Fetch error:", error)
       }
     }
     fetchPost()
-  }, [])
+  }, [API])
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

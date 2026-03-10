@@ -90,12 +90,12 @@ const Edit_Listing = () => {
 
 
               id="image"
-              {...register("listing.image")}
+              {...register("listing.image.url")}
               // value={update.image?.url || ""}
               // onChange={(e) => setUpdate({ ...update, image: { ...update.image, url: e.target.value } })}
               className="mt-1 block w-full px-4 py-3 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#FF5A5F] focus:border-transparent transition-all"
             />
-            {errors.listing?.image && <p className='text-red-600'>{errors.listing.image.message}</p>}
+            {errors.listing?.image?.url && <p className='text-red-600'>{errors.listing.image.url.message}</p>}
 
           </div>
 
@@ -104,9 +104,10 @@ const Edit_Listing = () => {
             <div>
               <label htmlFor="price" className="block text-sm font-semibold text-gray-800">Price ($)</label>
               <input
-
-                {...register('listing.price')}
+                type="number"
+                {...register('listing.price', { valueAsNumber: true })}
                 id="price"
+
                 // value={update.price || ""}
                 // onChange={(e) => setUpdate({ ...update, price: e.target.value })}
                 className="mt-1 block w-full px-4 py-3 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#FF5A5F] focus:border-transparent transition-all"
@@ -118,7 +119,7 @@ const Edit_Listing = () => {
               <label htmlFor="country" className="block text-sm font-semibold text-gray-800">Country</label>
               <input
 
-                {...register('listng.price')}
+                {...register('listing.country')}
                 id="country"
                 // value={update.country || ""}
                 // onChange={(e) => setUpdate({ ...update, country: e.target.value })}

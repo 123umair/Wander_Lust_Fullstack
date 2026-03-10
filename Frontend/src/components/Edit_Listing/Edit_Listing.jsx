@@ -139,6 +139,7 @@ const Edit_Listing = () => {
               // onChange={(e) => setUpdate({ ...update, location: e.target.value })}
               className="mt-1 block w-full px-4 py-3 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#FF5A5F] focus:border-transparent transition-all"
             />
+            {errors.listing?.location && <p className='text-red-600'>{errors.listing.location.message}</p>}
           </div>
 
           {/* Update Button: Airbnb Red Theme */}

@@ -14,10 +14,13 @@ const Form = () => {
         },
         body: JSON.stringify(data)
       })
+      if (!res.ok) {
+        throw new Error(`Create failed with status ${res.status}`)
+      }
+      navigate('/')
     } catch (error) {
       console.log(error)
     }
-    navigate('/')
   }
   const { register, handleSubmit, formState } = useForm({ resolver: zodResolver(formSchema) })
   const { errors } = formState
@@ -71,7 +74,7 @@ const Form = () => {
             <input
 
               id="image"
-              {...register('listing.image')}
+              {...register('listing.image.url')}
               placeholder="https://images.unsplash.com/..."
               className="mt-1 block w-full px-4 py-3 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#FF5A5F] focus:border-transparent transition-all"
             />

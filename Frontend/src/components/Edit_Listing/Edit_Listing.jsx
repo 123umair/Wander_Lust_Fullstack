@@ -22,7 +22,6 @@ const Edit_Listing = () => {
       try {
         const res = await axios.get(`${API}/listings/${id}/edit`)
         reset({ listing: res.data.listing })
-        console.log('our data', { listing: res.data.listing })
       } catch (error) {
         console.log("error", error)
       }

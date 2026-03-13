@@ -23,15 +23,16 @@ main()
 
 // Index Route
 app.get("/listings",wrapAsync(async(req, res) => {
-   if(!req.body.listing){
-      throw new ExpressError(400,"Send valid data for listing.")   // ager client side sy koi data aisy bejy k jis may 'listing' object hi mawjood na ho tho ye error ayega just try it on post man or hopscotch
-   }
+  
    const allListings = await Listing.find({})
    res.json({allListings})
-})
-)
+}))
+
 // New Route
 app.post("/listings/create_listing",wrapAsync(async(req,res,next)=>{
+    if(!req.body.listing){
+   throw new ExpressError(400,"Send valid data for listing.")   // ager client side sy koi data aisy bejy k jis may 'listing' object hi mawjood na ho tho ye error ayega just try it on post man or hopscotch
+   }
    const newListing = new Listing(req.body.listing)
    await newListing.save()
    res.json('success')   

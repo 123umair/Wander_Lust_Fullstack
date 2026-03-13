@@ -79,8 +79,10 @@ app.all(`/*splat`,(req,res,next) => {
 })                            
 
 app.use((err,req,res,next)=>{
+  if (err.name === 'CastError') {
+    return res.status(400).json({ error: 'Invalid ID format' });}
    let {statusCode=500,message="Something went wrong!"} = err;       // and here the middleware will catch these error .
-   res.status(statusCode).send(message)
+    res.status(statusCode).json({ error: message })
 })
 
 

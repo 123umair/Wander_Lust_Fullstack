@@ -10,7 +10,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended:true}))
  // means that if any type of data that are urlencoded formate then this middleware easily parse these data inside the req.body for understand the data
 app.use(cors({origin:"http://localhost:5173"}));
-
+import { listingSchema } from './schemas/schema.js'
 
 async function main(){
       await  mongoose.connect("mongodb://127.0.0.1:27017/wanderLust") 
@@ -23,16 +23,17 @@ main()
 
 // Index Route
 app.get("/listings",wrapAsync(async(req, res) => {
-  
    const allListings = await Listing.find({})
    res.json({allListings})
 }))
 
 // New Route
 app.post("/listings/create_listing",wrapAsync(async(req,res,next)=>{
-    if(!req.body.listing){
-   throw new ExpressError(400,"Send valid data for listing.")   // ager client side sy koi data aisy bejy k jis may 'listing' object hi mawjood na ho tho ye error ayega just try it on post man or hopscotch
-   }
+  
+   const result = listingSchema.parse(req.body)
+   console.log(' here your schema is validated',result)
+ 
+   
    const newListing = new Listing(req.body.listing)
    await newListing.save()
    res.json('success')   

@@ -10,27 +10,39 @@ import { ExpressError } from './utils/ExpressError.js'
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
  // means that if any type of data that are urlencoded formate then this middleware easily parse these data inside the req.body for understand the data
-app.use(cors({ origin: process.env.FRONTEND_URL }));
-import { connectDB } from './src/config/db.js'
-import { listingSchema } from './schemas/schema.js'
-
+ import { connectDB } from './src/config/db.js'
+ import { listingSchema } from './schemas/schema.js'
+ 
+ const frontendOrigin = process.env.FRONTEND_URL;
+ if (!frontendOrigin) {
+     throw new Error("FRONTEND_URL is required for CORS configuration");
+}
+ app.use(cors({ origin: frontendOrigin}));
 
 // connect database
-connectDB();
+
+const startServer=async()=>{
+  await connectDB();
+  app.listen(port,()=>{
+   console.log('Server is running on port',port)
+  })
+}
+startServer().catch((err)=>{
+   console.error("Server Start Up failed:",err.message)
+   process.exit(1)
+})
 
 
 // convert validation schema to middlewear
 const validateListing = (req,res,next)=>{
-   const { error } = listingSchema.parse(req.body)
-   if (error)
-   {
-      let errorMsg =error.details.map((el)=>el.message).join(",")
-      throw new ExpressError(400,errorMsg)
+   const result = listingSchema.safeParse(req.body);
+  if (!result.success) {
+     const errorMsg = result.error.issues.map((el) => el.message).join(", ");
+     return next(new ExpressError(400, errorMsg));
    }
-   else{
-      next()
-   }
-}
+  req.body = result.data;
+   return next();
+ }
 
 
 // Index Route
@@ -94,9 +106,3 @@ app.use((err,req,res,next)=>{
    let {statusCode=500,message="Something went wrong!"} = err;       // and here the middleware will catch these error .
     res.status(statusCode).json({ error: message })
 })
-
-
-
- app.listen(port,()=>{
-    console.log("Server running on port",port)
- })

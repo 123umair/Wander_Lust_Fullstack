@@ -1,25 +1,37 @@
 import express from 'express'
 import cors from 'cors'
-import mongoose from 'mongoose'
+import dotenv from "dotenv";
+dotenv.config();
+const port = process.env.PORT || 4000;
 import { Listing } from './src/Models/Listing.js'
 const app = express()
-const port = 4000
 import { wrapAsync } from './utils/wrapAsync.js'
 import { ExpressError } from './utils/ExpressError.js'
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
  // means that if any type of data that are urlencoded formate then this middleware easily parse these data inside the req.body for understand the data
-app.use(cors({origin:"http://localhost:5173"}));
+app.use(cors({ origin: process.env.FRONTEND_URL }));
+import { connectDB } from './src/config/db.js'
 import { listingSchema } from './schemas/schema.js'
 
-async function main(){
-      await  mongoose.connect("mongodb://127.0.0.1:27017/wanderLust") 
- }
 
-main()
-.then(()=>{
-    console.log("Connection is successfull")
-})
+// connect database
+connectDB();
+
+
+// convert validation schema to middlewear
+const validateListing = (req,res,next)=>{
+   const { error } = listingSchema.parse(req.body)
+   if (error)
+   {
+      let errorMsg =error.details.map((el)=>el.message).join(",")
+      throw new ExpressError(400,errorMsg)
+   }
+   else{
+      next()
+   }
+}
+
 
 // Index Route
 app.get("/listings",wrapAsync(async(req, res) => {
@@ -27,20 +39,18 @@ app.get("/listings",wrapAsync(async(req, res) => {
    res.json({allListings})
 }))
 
+
+
 // New Route
-app.post("/listings/create_listing",wrapAsync(async(req,res,next)=>{
-  
-   const result = listingSchema.parse(req.body)
-   console.log(' here your schema is validated',result)
+app.post("/listings/create_listing",validateListing,wrapAsync(async(req,res,next)=>{
  
-   
    const newListing = new Listing(req.body.listing)
    await newListing.save()
    res.json('success')   
 }))
 
 // Show Route
-app.get("/listings/:id", wrapAsync(async (req,res)=>{
+app.get("/listings/:id",wrapAsync(async (req,res)=>{
    let { id } = req.params
    const listing = await Listing.findById(id)
    res.json({listing})
@@ -55,9 +65,8 @@ app.get("/listings/:id/edit", wrapAsync(async(req,res)=>{
 }))
 
 // Update Route
-app.patch("/listings/:id", wrapAsync(async (req, res) => {
-    if(!req.body.listing){
-      throw new ExpressError(400,"Send valid data for listing.") }
+app.patch("/listings/:id", validateListing,wrapAsync(async (req, res) => {
+   
    let { id } = req.params;
    await Listing.findByIdAndUpdate(
       id,
@@ -89,5 +98,5 @@ app.use((err,req,res,next)=>{
 
 
  app.listen(port,()=>{
-    console.log("Server running on port")
+    console.log("Server running on port",port)
  })

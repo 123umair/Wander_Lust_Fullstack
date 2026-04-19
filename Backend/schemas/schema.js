@@ -11,6 +11,7 @@ export const listingSchema = z.object({
         price: z.number().min(1, "enter the Price."),
         country:z.string(), 
         location:z.string(),
+        // now we are adding the serverside validation
         
     })
 })

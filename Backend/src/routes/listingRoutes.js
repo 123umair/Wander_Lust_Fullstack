@@ -5,7 +5,7 @@ import { Listing } from "../Models/Listing.js";
 import { wrapAsync } from "../../utils/wrapAsync.js";
 import { ExpressError } from "../../utils/ExpressError.js";
 import { listingSchema } from "../../schemas/schema.js";
-
+import { reviewModel } from "../Models/reviews.js";
 // validation middleware
 const validateListing = (req, res, next) => {
   const result = listingSchema.safeParse(req.body);
@@ -82,4 +82,11 @@ router.delete(
   })
 );
 
+
+
+// Review Route
+// router.post('/:id/reviews',wrapAsync(async(req,res)=>{
+//   const newreview = new reviewModel(req.body)
+//   console.log(newreview,'my review')
+// }))
 export default router;

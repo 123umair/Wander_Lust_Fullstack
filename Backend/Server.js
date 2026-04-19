@@ -10,8 +10,7 @@ app.use(express.urlencoded({extended:true}))
  // means that if any type of data that are urlencoded formate then this middleware easily parse these data inside the req.body for understand the data
 import { connectDB } from './src/config/db.js'
 import listingRoutes from "./src/routes/listingRoutes.js";
-
-
+import reviewRoutes from './src/routes/reviewsRoutes.js'
  
  const frontendOrigin = process.env.FRONTEND_URL;
  if (!frontendOrigin) {
@@ -33,7 +32,7 @@ startServer().catch((err)=>{
 })
 
 app.use('/listings',listingRoutes)
-
+app.use('/listings',reviewRoutes)
 app.all(`/*splat`,(req,res,next) => {  
    next(new ExpressError(404,"Page Not Found!"))          // here we created the express error 
 })                            

@@ -11,7 +11,17 @@ export const listingSchema = z.object({
         price: z.number().min(1, "enter the Price."),
         country:z.string(), 
         location:z.string(),
-        // now we are adding the serverside validation
+        // so thsi schema is a serverside validation.
         
     })
 })
+
+
+
+
+export const reviewSchemaValid = z.object({
+   review: z.object({
+      rating: z.number().min(1).max(5),
+      comment: z.string().min(1)
+   })
+});

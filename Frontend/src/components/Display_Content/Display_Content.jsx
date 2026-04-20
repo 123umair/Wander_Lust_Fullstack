@@ -39,11 +39,22 @@ const Display_Content = () => {
     }
   }
 
-  const { register, formState, handleSubmit } = useForm({ resolver: zodResolver(reviewfromSchema) })
-  const { errors } = formState
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm({
+    resolver: zodResolver(reviewfromSchema),
+    defaultValues: {
+      rating: 3,
+      comment: ""
+    }
+  })
+
   if (!content) return <div className="text-center py-10 text-gray-500">Loading...</div>
 
   const submitReview = async (data) => {
+    console.log("hitting")
     try {
       const res = await axios.post(
         `${API}/listings/${id}/reviews`,
@@ -157,6 +168,10 @@ const Display_Content = () => {
             </button>
           </div>
         </form>
+        <div>
+          <h1>all reviews</h1>
+          <p>{content.reviews}</p>
+        </div>
       </div>
     </div >
   )

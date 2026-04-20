@@ -1,5 +1,7 @@
 import {z} from 'zod'
 export const reviewfromSchema = z.object({
-  comment: z.string().min(1, 'field is required'),
-  rating: z.string() // ya number (agar convert karo)
+  review:z.object({
+          rating: z.number().min(1).max(5),
+      comment: z.string().min(1)
+  })
 })

@@ -3,9 +3,28 @@ import { wrapAsync } from '../../utils/wrapAsync.js';
 const router = express.Router();
 import { reviewModel } from '../Models/reviews.js';
 import { Listing } from '../Models/Listing.js';
+import { reviewSchemaValid } from '../../schemas/schema.js';
+import { ExpressError } from '../../utils/ExpressError.js';
+
+
+
+// validation middlewear
+const validateReviews = (req,res,next)=>{
+const result = reviewSchemaValid.safeParse(req.body.review)
+
+if (!result.success)
+{
+    const errorMsg = result.error.issues.map((el)=>el.message).join(", ");
+    return next(new ExpressError(400,errorMsg))
+}
+req.body = result.data
+next()
+}
+
+
 
 // show reviews
-router.post('/:id/reviews',wrapAsync(async(req,res)=>{
+router.post('/:id/reviews',validateReviews,wrapAsync(async(req,res)=>{
 const listing = await Listing.findById(req.params.id) //find out the listing where request the reviews.
 const newReview = new reviewModel(req.body.review)
 listing.reviews.push(newReview)
@@ -17,3 +36,4 @@ res.json({sucess:true})
 
 }))
 export default router
+

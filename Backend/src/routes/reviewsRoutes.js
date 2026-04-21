@@ -30,7 +30,7 @@ const newReview = new reviewModel(req.body.review)
 listing.reviews.push(newReview)
 await newReview.save()
 await listing.save()
-res.json({sucess:true})
+res.json({review:newReview})
 
 // .save() method is used for if we can any change make in the existing database.
 

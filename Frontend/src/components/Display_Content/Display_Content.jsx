@@ -1,10 +1,11 @@
 import React from 'react'
 import axios from 'axios'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { reviewfromSchema } from './reviewFormSchema.js'
+
 
 
 const Display_Content = () => {
@@ -12,18 +13,9 @@ const Display_Content = () => {
   const [content, setContent] = useState(null)
   const navigate = useNavigate()
   const API = import.meta.env.VITE_API_URL
-  const submitReview = async (data) => {
-    console.log("hitting", data)
-    try {
-      const res = await axios.post(
-        `${API}/listings/${id}/reviews`,
-        { review: data }
-      )
-      console.log("Success:", res.data)
-    } catch (error) {
-      console.error('review error', error.response?.data || error.message)
-    }
-  }
+
+
+  console.log(content, 'content')
 
   useEffect(() => {
     const fetchContent = async () => {
@@ -55,14 +47,35 @@ const Display_Content = () => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors }
   } = useForm({
     resolver: zodResolver(reviewfromSchema),
     defaultValues: {
-      rating: 3,
-      comment: ""
+      review: {
+        rating: 3,
+        comment: ""
+      }
     }
   })
+  const submitReview = useCallback(async (data) => {
+    try {
+      const res = await axios.post(
+        `${API}/listings/${id}/reviews`,
+        { review: data }
+      )
+      setContent((prev) => ({
+        ...prev, reviews: [...prev.reviews, res.data.review]
+      }))
+      reset()
+    }
+    catch (error) {
+      // Best practice: Log the actual error response from the server
+      console.error('review error', error.response?.data || error.message)
+    }
+
+  }, [id, reset]); // These are the external variables the function actually depends on
+
 
   if (!content) return <div className="text-center py-10 text-gray-500">Loading...</div>
 
@@ -148,7 +161,7 @@ const Display_Content = () => {
             <div className='mt-2'>
               <label htmlFor="rating">Rating</label>
               <input type="range" min="1" max="5" id='Rating' name='review[rating]' className='cursor-pointer w-full'
-                {...register('review.rating')}
+                {...register('review.rating', { valueAsNumber: true })}
               />
             </div>
             <div className='mt-2'>
@@ -159,7 +172,7 @@ const Display_Content = () => {
                 cols={3}
                 rows={5} >
               </textarea>
-              {errors.comment && <p className='text-red-600'>{errors.comment.message}</p>}
+              {errors.review?.comment && <p className='text-red-600'>{errors.review?.comment.message}</p>}
             </div>
             <br />
             <button className="bg-white hover:bg-black text-black hover:text-white text-sm font-bold px-4 py-2 rounded-lg transition active:scale-95 cursor-pointer border"
@@ -169,13 +182,46 @@ const Display_Content = () => {
             </button>
           </div>
         </form>
-        <div>
-          <h1>all reviews</h1>
-          {content.reviews.length > 0 ? (content.reviews.map((data) => {
-            return (
-              <p>{data}</p>
-            )
-          })) : <p>nothing</p>}
+        <div className="mt-6">
+          <h2 className="text-xl font-semibold mb-4">All Reviews</h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {content.reviews.length > 0 ? (
+              content.reviews.map((review) => (
+                <div
+                  key={review._id}
+                  className="border border-gray-100  p-4 shadow-sm hover:shadow-md transition"
+                >
+                  {/* Header */}
+                  <div className="mb-2">
+                    <div className="flex items-center gap-2">
+                      <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-white font-bold ">
+                        U
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold">User</p>
+                        <p className="text-xs text-gray-500">
+                          {new Date(review.createdAt).toDateString()}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Rating */}
+                    <div className="text-[10px] text-black pl-2 pt-2">
+                      ⭐ {review.rating}
+                    </div>
+                  </div>
+
+                  {/* Comment */}
+                  <p className="text-gray-700 text-sm leading-relaxed pl-2">
+                    {review.comment}
+                  </p>
+                </div>
+              ))
+            ) : (
+              <p className="text-gray-500">No reviews yet</p>
+            )}
+          </div>
         </div>
       </div>
     </div >

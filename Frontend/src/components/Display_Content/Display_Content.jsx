@@ -12,6 +12,19 @@ const Display_Content = () => {
   const [content, setContent] = useState(null)
   const navigate = useNavigate()
   const API = import.meta.env.VITE_API_URL
+  const submitReview = async (data) => {
+    console.log("hitting", data)
+    try {
+      const res = await axios.post(
+        `${API}/listings/${id}/reviews`,
+        { review: data }
+      )
+      console.log("Success:", res.data)
+    } catch (error) {
+      console.error('review error', error.response?.data || error.message)
+    }
+  }
+
   useEffect(() => {
     const fetchContent = async () => {
       try {
@@ -53,18 +66,6 @@ const Display_Content = () => {
 
   if (!content) return <div className="text-center py-10 text-gray-500">Loading...</div>
 
-  const submitReview = async (data) => {
-    console.log("hitting")
-    try {
-      const res = await axios.post(
-        `${API}/listings/${id}/reviews`,
-        { review: data }
-      )
-      console.log("Success:", res.data)
-    } catch (error) {
-      console.error('review error', error.response?.data || error.message)
-    }
-  }
 
   return (
     /* Parent padding kam kar di (py-6) */
@@ -147,13 +148,13 @@ const Display_Content = () => {
             <div className='mt-2'>
               <label htmlFor="rating">Rating</label>
               <input type="range" min="1" max="5" id='Rating' name='review[rating]' className='cursor-pointer w-full'
-                {...register('rating')}
+                {...register('review.rating')}
               />
             </div>
             <div className='mt-2'>
               <label htmlFor="comment">Comments</label>
               <textarea name="review[comment]" id="comment"
-                {...register('comment')}
+                {...register('review.comment')}
                 className='w-full border border-gray-400'
                 cols={3}
                 rows={5} >
@@ -170,7 +171,11 @@ const Display_Content = () => {
         </form>
         <div>
           <h1>all reviews</h1>
-          <p>{content.reviews}</p>
+          {content.reviews.length > 0 ? (content.reviews.map((data) => {
+            return (
+              <p>{data}</p>
+            )
+          })) : <p>nothing</p>}
         </div>
       </div>
     </div >

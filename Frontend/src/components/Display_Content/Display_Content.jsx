@@ -80,7 +80,6 @@ const Display_Content = () => {
       const res = await axios.delete(`${API}/listings/${id}/reviews/${reviewId}`)
       console.log(res, 'data')
       setContent((prev) => ({
-        ...prev,
         reviews: prev.reviews.filter(r => r._id !== reviewId)
       }))
     } catch (error) {

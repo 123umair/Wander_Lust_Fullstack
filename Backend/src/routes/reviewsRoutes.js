@@ -35,5 +35,15 @@ res.json({review:newReview})
 // .save() method is used for if we can any change make in the existing database.
 
 }))
+
+
+// delete reviews route 
+router.delete('/:id/reviews/:reviewId',wrapAsync(async(req,res)=>{
+
+    const {id,reviewId} =req.params //fetching ids.
+    await Listing.findByIdAndUpdate(id,{$pull:  {reviews:reviewId}})// deleted or removed from the listings
+    await reviewModel.findByIdAndDelete(reviewId) //delete the review from the reviews model 
+   res.json({sucess:true})
+}))
 export default router
 

@@ -75,7 +75,19 @@ const Display_Content = () => {
     }
 
   }, [id, reset]); // These are the external variables the function actually depends on
-
+  const handleDeleteReviews = async (reviewId) => {
+    try {
+      const res = await axios.delete(`${API}/listings/${id}/reviews/${reviewId}`)
+      console.log(res, 'data')
+      setContent((prev) => ({
+        ...prev,
+        reviews: prev.reviews.filter(r => r._id !== reviewId)
+      }))
+    } catch (error) {
+      console.error("review error", error.response?.data || error.message
+      )
+    }
+  }
 
   if (!content) return <div className="text-center py-10 text-gray-500">Loading...</div>
 
@@ -168,7 +180,7 @@ const Display_Content = () => {
               <label htmlFor="comment">Comments</label>
               <textarea name="review[comment]" id="comment"
                 {...register('review.comment')}
-                className='w-full border border-gray-400'
+                className='w-full border border-gray-400 px-2 py-2 outline-none text-sm'
                 cols={3}
                 rows={5} >
               </textarea>
@@ -216,11 +228,16 @@ const Display_Content = () => {
                   <p className="text-gray-700 text-sm leading-relaxed pl-2">
                     {review.comment}
                   </p>
+
+                  <button className="bg-white hover:bg-red-500 text-red-500 hover:text-white text-sm font-bold px-4 py-2 rounded-lg transition active:scale-95 cursor-pointer border border-red-500 mt-5" onClick={() => (handleDeleteReviews(review._id))}>Delete</button>
+
                 </div>
+
               ))
             ) : (
               <p className="text-gray-500">No reviews yet</p>
             )}
+
           </div>
         </div>
       </div>

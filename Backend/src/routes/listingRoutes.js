@@ -5,7 +5,7 @@ import { Listing } from "../Models/Listing.js";
 import { wrapAsync } from "../../utils/wrapAsync.js";
 import { ExpressError } from "../../utils/ExpressError.js";
 import { listingSchema } from "../../schemas/schema.js";
-
+import { reviewModel } from "../Models/reviews.js";
 // validation middleware
 const validateListing = (req, res, next) => {
   const result = listingSchema.safeParse(req.body);
@@ -19,6 +19,8 @@ const validateListing = (req, res, next) => {
   next();
 };
 
+
+
 // Index Route
 router.get(
   "/",
@@ -30,7 +32,7 @@ router.get(
 
 // Create Route
 router.post(
-  "/",
+  "/create_listing",
   validateListing,
   wrapAsync(async (req, res) => {
     const newListing = new Listing(req.body.listing);
@@ -44,7 +46,7 @@ router.get(
   "/:id",
   wrapAsync(async (req, res) => {
     const { id } = req.params;
-    const listing = await Listing.findById(id);
+    const listing = await Listing.findById(id).populate('reviews');
     res.json({ listing });
   })
 );
@@ -82,4 +84,15 @@ router.delete(
   })
 );
 
+
+
+// Review Route
+// router.post('/:id/reviews',wrapAsync(async(req,res)=>{
+//   const newreview = new reviewModel(req.body)
+//   console.log(newreview,'my review')
+// }))
 export default router;
+
+
+
+

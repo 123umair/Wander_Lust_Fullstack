@@ -63,6 +63,8 @@ const Display_Listings = () => {
             </div>
           </Link>
         ))}
+
+
       </div>
     </div>
   )

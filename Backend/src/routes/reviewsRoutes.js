@@ -1,6 +1,6 @@
 import express from 'express'
 import { wrapAsync } from '../../utils/wrapAsync.js';
-const router = express.Router();
+const router = express.Router({mergeParams:true});
 import { reviewModel } from '../Models/reviews.js';
 import { Listing } from '../Models/Listing.js';
 import { listingSchema, reviewSchemaValid } from '../../schemas/schema.js';
@@ -23,7 +23,7 @@ next()
 
 
 // show reviews
-router.post('/:id/reviews',validateReviews,wrapAsync(async(req,res)=>{
+router.post('/',validateReviews,wrapAsync(async(req,res)=>{
 const listing = await Listing.findById(req.params.id) //find out the listing where request the reviews.
 const newReview = new reviewModel(req.body.review)
 await newReview.save()
@@ -37,7 +37,7 @@ res.json({review:newReview})
 
 
 // delete reviews route 
-router.delete('/:id/reviews/:reviewId',wrapAsync(async(req,res)=>{
+router.delete('/:reviewId',wrapAsync(async(req,res)=>{
 
     const {id,reviewId} =req.params //fetching ids.
     await Listing.findByIdAndUpdate(id,{$pull:  {reviews:reviewId}})// deleted or removed from the listings

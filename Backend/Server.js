@@ -30,9 +30,9 @@ startServer().catch((err)=>{
    console.error("Server Start Up failed:",err.message)
    process.exit(1)
 })
-
+// this is the parent routes /listings,/listings/:id/reviews this all are parent routes
 app.use('/listings',listingRoutes)
-app.use('/listings',reviewRoutes)
+app.use('/listings/:id/reviews',reviewRoutes)
 app.all(`/*splat`,(req,res,next) => {  
    next(new ExpressError(404,"Page Not Found!"))          // here we created the express error 
 })                            

@@ -3,9 +3,8 @@ import { wrapAsync } from '../../utils/wrapAsync.js';
 const router = express.Router();
 import { reviewModel } from '../Models/reviews.js';
 import { Listing } from '../Models/Listing.js';
-import { reviewSchemaValid } from '../../schemas/schema.js';
+import { listingSchema, reviewSchemaValid } from '../../schemas/schema.js';
 import { ExpressError } from '../../utils/ExpressError.js';
-
 
 
 // validation middlewear
@@ -27,8 +26,8 @@ next()
 router.post('/:id/reviews',validateReviews,wrapAsync(async(req,res)=>{
 const listing = await Listing.findById(req.params.id) //find out the listing where request the reviews.
 const newReview = new reviewModel(req.body.review)
-listing.reviews.push(newReview)
 await newReview.save()
+listing.reviews.push(newReview._id) //here push the newReview._id to the reviews array in a listing.
 await listing.save()
 res.json({review:newReview})
 
@@ -46,4 +45,6 @@ router.delete('/:id/reviews/:reviewId',wrapAsync(async(req,res)=>{
    res.json({sucess:true})
 }))
 export default router
+
+
 

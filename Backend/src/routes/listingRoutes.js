@@ -19,6 +19,8 @@ const validateListing = (req, res, next) => {
   next();
 };
 
+
+
 // Index Route
 router.get(
   "/",
@@ -90,3 +92,7 @@ router.delete(
 //   console.log(newreview,'my review')
 // }))
 export default router;
+
+
+
+

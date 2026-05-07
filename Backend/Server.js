@@ -11,7 +11,15 @@ app.use(express.urlencoded({extended:true}))
 import { connectDB } from './src/config/db.js'
 import listingRoutes from "./src/routes/listingRoutes.js";
 import reviewRoutes from './src/routes/reviewsRoutes.js'
- 
+import session from 'express-session'
+
+const sessionOptions = {
+  secret:"mysecretcode",
+  resave:false,
+  saveUninitialized:true
+}
+
+app.use(session(sessionOptions))
  const frontendOrigin = process.env.FRONTEND_URL;
  if (!frontendOrigin) {
      throw new Error("FRONTEND_URL is required for CORS configuration");

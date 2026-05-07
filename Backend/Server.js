@@ -16,7 +16,13 @@ import session from 'express-session'
 const sessionOptions = {
   secret:"mysecretcode",
   resave:false,
-  saveUninitialized:true
+  saveUninitialized:true,
+  cookie:{
+    expires:Date.now + 7 * 24 * 60 *60 * 1000,
+    maxAge: 7 * 24 * 60 *60 * 1000,
+    httpOnly:true // prevent cross-scripting attack
+      // my cookie is expires after the 7 days .
+  }
 }
 
 app.use(session(sessionOptions))

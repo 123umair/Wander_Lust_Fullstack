@@ -13,6 +13,7 @@ const Display_Content = () => {
   const { id } = useParams()
   const [content, setContent] = useState(null)
   const navigate = useNavigate()
+
   const API = import.meta.env.VITE_API_URL
 
 
@@ -23,6 +24,12 @@ const Display_Content = () => {
       try {
         const res = await axios.get(`${API}/listings/${id}`)
         setContent(res.data.listing)
+        const data = res.data
+        if (!data.listing) {
+          toast.error(data.message)
+          navigate("/")
+          return
+        }
       } catch (error) {
         console.log("error", error)
       }

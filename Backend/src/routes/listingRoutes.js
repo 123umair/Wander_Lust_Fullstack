@@ -47,7 +47,11 @@ router.get(
   wrapAsync(async (req, res) => {
     const { id } = req.params;
     const listing = await Listing.findById(id).populate('reviews');
-    res.json({ listing });
+    if(!listing)
+    {
+     return res.json({success:false,message:"Listing you requested for doest not exist"})
+    }
+    return res.json({success:true, listing });
   })
 );
 

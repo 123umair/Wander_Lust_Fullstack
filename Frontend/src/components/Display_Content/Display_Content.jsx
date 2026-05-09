@@ -5,6 +5,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { reviewfromSchema } from './reviewFormSchema.js'
+import { toast } from 'react-toastify'
 
 
 
@@ -34,8 +35,19 @@ const Display_Content = () => {
       try {
         const res = await axios.delete(`${API}/listings/${id}`);
         if (res.status === 200) {
-          alert("Listing deleted successfully!")
+
           navigate("/")
+          toast.error('Listing deleted successfully!', {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+
+          });
         }
       } catch (error) {
         console.error("Delete error:", error)

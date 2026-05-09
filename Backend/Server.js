@@ -11,7 +11,21 @@ app.use(express.urlencoded({extended:true}))
 import { connectDB } from './src/config/db.js'
 import listingRoutes from "./src/routes/listingRoutes.js";
 import reviewRoutes from './src/routes/reviewsRoutes.js'
- 
+import session from 'express-session'
+
+const sessionOptions = {
+  secret:"mysecretcode",
+  resave:false,
+  saveUninitialized:true,
+  cookie:{
+    expires:Date.now + 7 * 24 * 60 *60 * 1000,
+    maxAge: 7 * 24 * 60 *60 * 1000,
+    httpOnly:true // prevent cross-scripting attack
+      // my cookie is expires after the 7 days .
+  }
+}
+
+app.use(session(sessionOptions))
  const frontendOrigin = process.env.FRONTEND_URL;
  if (!frontendOrigin) {
      throw new Error("FRONTEND_URL is required for CORS configuration");
@@ -30,9 +44,9 @@ startServer().catch((err)=>{
    console.error("Server Start Up failed:",err.message)
    process.exit(1)
 })
-
+// this is the parent routes /listings,/listings/:id/reviews this all are parent routes
 app.use('/listings',listingRoutes)
-app.use('/listings',reviewRoutes)
+app.use('/listings/:id/reviews',reviewRoutes)
 app.all(`/*splat`,(req,res,next) => {  
    next(new ExpressError(404,"Page Not Found!"))          // here we created the express error 
 })                            

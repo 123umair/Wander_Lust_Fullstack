@@ -2,6 +2,7 @@ import { formSchema } from './FormSchema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { Navigate, useNavigate } from 'react-router'
+import { toast } from 'react-toastify'
 const Form = () => {
   const navigate = useNavigate()
   const API = import.meta.env.VITE_API_URL
@@ -17,7 +18,20 @@ const Form = () => {
       if (!res.ok) {
         throw new Error(`Create failed with status ${res.status}`)
       }
+
       navigate('/')
+      toast.success('Listing Successfully Added.!', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        // transition: {Bounce},
+      });
+
     } catch (error) {
       console.log(error)
     }
@@ -128,6 +142,7 @@ const Form = () => {
             >
               Add Listing
             </button>
+
           </div>
         </form>
 

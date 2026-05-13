@@ -12,6 +12,11 @@ import { connectDB } from './src/config/db.js'
 import listingRoutes from "./src/routes/listingRoutes.js";
 import reviewRoutes from './src/routes/reviewsRoutes.js'
 import session from 'express-session'
+import passport from 'passport'
+import LocalStrategy from 'passport-local'
+import { User } from './src/Models/user.js';
+
+
 
 const sessionOptions = {
   secret:"mysecretcode",
@@ -24,6 +29,13 @@ const sessionOptions = {
       // my cookie is expires after the 7 days .
   }
 }
+
+app.use(passport.initialize())
+app.use(passport.session()) // we can use the session also for passport initialization and the the passport.session() is used if when a user will login at first time then its can't be again login for every request in a single session.
+passport.use(new LocalStrategy(User.authenticate())) // means how much users will come then it should be first authenticate through LocalStrategy using the authenticate() method.
+
+passport.serializeUser(User.serializeUser()) // if we stores all the user related information then we will serialize the user.
+passport.deserializeUser(User.deserializeUser()) // if we will remove all the user related information then we will desseialize the user from the session.means when a user logout.
 
 app.use(session(sessionOptions))
  const frontendOrigin = process.env.FRONTEND_URL;

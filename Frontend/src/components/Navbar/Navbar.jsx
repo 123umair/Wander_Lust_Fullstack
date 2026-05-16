@@ -44,6 +44,13 @@ const Navbar = () => {
               >
                 SignUP
               </NavLink>
+              <NavLink
+                to="/login"
+                className={({ isActive }) => isActive ? activeStyle : normalStyle}
+              >
+                login
+              </NavLink>
+
             </div>
           </div>
 
@@ -94,6 +101,14 @@ const Navbar = () => {
               }`}
           >
             SignUP
+          </NavLink>
+          <NavLink
+            to="/login"
+            onClick={() => setIsOpen(false)}
+            className={({ isActive }) => `block px-4 py-3 rounded-xl text-base font-semibold transition-all ${isActive ? 'bg-[#FF5A5F] text-white shadow-md' : 'text-gray-700 hover:bg-white hover:text-[#FF5A5F]'
+              }`}
+          >
+            SignIn
           </NavLink>
         </div>
       </div>

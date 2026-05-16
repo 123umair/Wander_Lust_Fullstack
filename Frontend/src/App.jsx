@@ -9,6 +9,7 @@ const Display_Listings = lazy(() => import('./components/Display_Listings/Displa
 const Display_Content = lazy(() => import('./components/Display_Content/Display_Content'))
 const Edit_Listing = lazy(() => import('./components/Edit_Listing/Edit_Listing'))
 const SignupForm = lazy(() => import('./components/Form/SignupForm'))
+const LoginForm = lazy(() => import('./components/Form/LoginForm'))
 import Form from './components/Form/Form'
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
             <Route path="/listings/create_listing" element={<Form />} />
             <Route path="/listings/:id/edit" element={<Edit_Listing />} />
             <Route path="/signup" element={<SignupForm />} />
+            <Route path="/login" element={<LoginForm />} />
           </Routes>
         </main>
         <Footer />

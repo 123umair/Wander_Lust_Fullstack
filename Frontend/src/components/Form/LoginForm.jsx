@@ -16,17 +16,15 @@ const LoginForm = () => {
 
             const res = await axios.post(
                 `${API}/login`,
-                data,
+                data,)
 
-            )
 
-            toast.success('Login Successful!', {
-                position: "top-right",
-                autoClose: 5000,
-                theme: "colored",
-            })
+            if (res) {
+                navigate('/')
+                toast.success(res.data.message)
+                return
+            }
 
-            navigate('/')
 
         } catch (error) {
 

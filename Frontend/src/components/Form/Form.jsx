@@ -15,22 +15,30 @@ const Form = () => {
         },
         body: JSON.stringify(data)
       })
+      const responseData = await res.json()
+
       if (!res.ok) {
-        throw new Error(`Create failed with status ${res.status}`)
+        navigate('/login')
+        toast.error(responseData.message)
+        return
+      }
+      else {
+        navigate('/')
+        toast.success('Listing Successfully Added.!', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+          // transition: {Bounce},
+        });
       }
 
-      navigate('/')
-      toast.success('Listing Successfully Added.!', {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-        // transition: {Bounce},
-      });
+
+
 
     } catch (error) {
       console.log(error)

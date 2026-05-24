@@ -6,6 +6,8 @@ import { wrapAsync } from "../../utils/wrapAsync.js";
 import { ExpressError } from "../../utils/ExpressError.js";
 import { listingSchema } from "../../schemas/schema.js";
 import { reviewModel } from "../Models/reviews.js";
+import { LoggedIn } from "../middlewear/LoggedIn.js";
+import passport from "passport";
 // validation middleware
 const validateListing = (req, res, next) => {
   const result = listingSchema.safeParse(req.body);
@@ -25,6 +27,7 @@ const validateListing = (req, res, next) => {
 router.get(
   "/",
   wrapAsync(async (req, res) => {
+  
     const allListings = await Listing.find({});
     res.json({ allListings });
   })
@@ -32,9 +35,11 @@ router.get(
 
 // Create Route
 router.post(
-  "/create_listing",
+  "/create_listing",  
   validateListing,
-  wrapAsync(async (req, res) => {
+  LoggedIn,
+  wrapAsync(async(req, res) => {
+    
     const newListing = new Listing(req.body.listing);
     await newListing.save();
     res.json({ success: true });
@@ -69,6 +74,7 @@ router.get(
 router.patch(
   "/:id",
   validateListing,
+  LoggedIn,
   wrapAsync(async (req, res) => {
     const { id } = req.params;
 
@@ -81,6 +87,7 @@ router.patch(
 // Delete Route
 router.delete(
   "/:id",
+  LoggedIn,
   wrapAsync(async (req, res) => {
     const { id } = req.params;
     await Listing.findByIdAndDelete(id);

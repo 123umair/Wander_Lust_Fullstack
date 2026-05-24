@@ -8,7 +8,7 @@ router.post('/signup',wrapAsync(async(req,res)=>{
 try {
     let {username,email,password} = req.body
    const newUser =  new User({username,email})
-   const registeredUser = await   User.register(newUser,password)
+   const registeredUser = await User.register(newUser,password)
    res.json({success:true,message:"user registered"})
 } catch (error) {
     console.log(error)
@@ -23,7 +23,8 @@ router.post('/login',
     wrapAsync(async(req,res)=>{
     try {
         let {username,password} = req.body
-        console.log(req.body)
+
+        res.json({sucess:true,message:"Acount Login Successfull"})
 
     } catch (error) {
         console.log('error',error)

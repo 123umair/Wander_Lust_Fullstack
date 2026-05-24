@@ -15,18 +15,10 @@ const SignupForm = () => {
             console.log(data)
 
             const res = await axios.post(`${API}/signup`, data,)
-            // Example API Call
-            // const res = await fetch('YOUR_API', {
-            //     method: "POST",
-            //     headers: {
-            //         "Content-Type": "application/json"
-            //     },
-            //     body: JSON.stringify(data)
-            // })
 
             toast.success('Account Created Successfully!', {
                 position: "top-right",
-                autoClose: 5000,
+                autoClose: 2000,
                 theme: "colored",
             })
 

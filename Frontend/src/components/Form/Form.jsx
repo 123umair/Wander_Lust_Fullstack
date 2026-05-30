@@ -16,14 +16,15 @@ const Form = () => {
       //   },
       //   body: JSON.stringify(data)
       const res = await axios.post(`${API}/listings/create_listing`, data, { withCredentials: true })
-      if (!res.ok) {
+      if (res) {
+        navigate('/')
+        return toast.success('Listing Successfully Added.!')
+
+      }
+      else {
         navigate('/login')
         toast.error(res.data.message)
         return
-      }
-      else {
-        navigate('/')
-        toast.success('Listing Successfully Added.!')
       }
     } catch (error) {
       console.log(error)

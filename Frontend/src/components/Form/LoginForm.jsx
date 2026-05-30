@@ -16,7 +16,7 @@ const LoginForm = () => {
 
             const res = await axios.post(
                 `${API}/login`,
-                data,)
+                data, { withCredentials: true })
 
 
             if (res) {

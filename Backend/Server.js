@@ -5,6 +5,12 @@ dotenv.config();
 const port = process.env.PORT || 4000;
 const app = express()
 import { ExpressError } from './utils/ExpressError.js'
+const frontendOrigin = process.env.FRONTEND_URL;
+ if (!frontendOrigin) {
+     throw new Error("FRONTEND_URL is required for CORS configuration");
+}
+ app.use(cors({ origin: frontendOrigin , credentials:true})); 
+
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
  // means that if any type of data that are urlencoded formate then this middleware easily parse these data inside the req.body for understand the data
@@ -21,16 +27,16 @@ import userRoutes from './src/routes/userRoutes.js'
 const sessionOptions = {
   secret:"mysecretcode",
   resave:false,
-  saveUninitialized:true,
+  saveUninitialized:false,
   cookie:{
     expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
     maxAge: 7 * 24 * 60 *60 * 1000,
-    httpOnly:true // prevent cross-scripting attack
-      // my cookie is expires after the 7 days .
+    httpOnly:true, // prevent cross-scripting attack // my cookie is expires after the 7 days .
+    secure:false,
   }
 }
 app.use(session(sessionOptions))
-
+ 
 app.use(passport.initialize())
 app.use(passport.session()) // we can use the session also for passport initialization and the the passport.session() is used if when a user will login at first time then its can't be again login for every request in a single session.
 passport.use(new LocalStrategy(User.authenticate())) // means how much users will come then it should be first authenticate through LocalStrategy using the authenticate() method.
@@ -38,11 +44,8 @@ passport.use(new LocalStrategy(User.authenticate())) // means how much users wil
 passport.serializeUser(User.serializeUser()) // if we stores all the user related information then we will serialize the user.
 passport.deserializeUser(User.deserializeUser()) // if we will remove all the user related information then we will desseialize the user from the session.means when a user logout.
 
- const frontendOrigin = process.env.FRONTEND_URL;
- if (!frontendOrigin) {
-     throw new Error("FRONTEND_URL is required for CORS configuration");
-}
- app.use(cors({ origin: frontendOrigin }));
+
+
 
 // connect database
 

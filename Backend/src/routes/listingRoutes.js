@@ -39,7 +39,7 @@ router.post(
   validateListing,
   LoggedIn,
   wrapAsync(async(req, res) => {
-    
+    console.log("hitting the routes")
     const newListing = new Listing(req.body.listing);
     await newListing.save();
     res.json({ success: true });
@@ -77,7 +77,7 @@ router.patch(
   LoggedIn,
   wrapAsync(async (req, res) => {
     const { id } = req.params;
-
+    console.log(req.body,'request body')
     await Listing.findByIdAndUpdate(id, { ...req.body.listing });
 
     res.json({ success: true, message: "Listing Updated Successfully!" });

@@ -14,7 +14,7 @@ const SignupForm = () => {
 
             console.log(data)
 
-            const res = await axios.post(`${API}/signup`, data,)
+            const res = await axios.post(`${API}/signup`, data, { withCredentials: true })
 
             toast.success('Account Created Successfully!', {
                 position: "top-right",

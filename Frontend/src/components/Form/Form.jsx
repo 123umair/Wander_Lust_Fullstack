@@ -3,43 +3,28 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { Navigate, useNavigate } from 'react-router'
 import { toast } from 'react-toastify'
+import axios from 'axios'
 const Form = () => {
   const navigate = useNavigate()
   const API = import.meta.env.VITE_API_URL
   const onSubmit = async (data) => {
     try {
-      const res = await fetch(`${API}/listings/create_listing`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data)
-      })
-      const responseData = await res.json()
-
+      // const res = await fetch(`${API}/listings/create_listing`, {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify(data)
+      const res = await axios.post(`${API}/listings/create_listing`, data, { withCredentials: true })
       if (!res.ok) {
         navigate('/login')
-        toast.error(responseData.message)
+        toast.error(res.data.message)
         return
       }
       else {
         navigate('/')
-        toast.success('Listing Successfully Added.!', {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: false,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-          // transition: {Bounce},
-        });
+        toast.success('Listing Successfully Added.!')
       }
-
-
-
-
     } catch (error) {
       console.log(error)
     }

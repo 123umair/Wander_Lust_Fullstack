@@ -1,4 +1,3 @@
-import React from 'react'
 import axios from 'axios'
 import { useState, useEffect, useCallback } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
@@ -22,7 +21,7 @@ const Display_Content = () => {
   useEffect(() => {
     const fetchContent = async () => {
       try {
-        const res = await axios.get(`${API}/listings/${id}`)
+        const res = await axios.get(`${API}/listings/${id}`, { withCredentials: true })
         setContent(res.data.listing)
         const data = res.data
         if (!data.listing) {
@@ -38,29 +37,20 @@ const Display_Content = () => {
   }, [id])
 
   const handleDelete = async () => {
-    if (window.confirm("Are you sure you want to delete this listing?")) {
-      try {
-        const res = await axios.delete(`${API}/listings/${id}`);
-        if (res.status === 200) {
-
-          navigate("/")
-          toast.error('Listing deleted successfully!', {
-            position: "top-right",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: false,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-
-          });
-        }
-      } catch (error) {
-        console.error("Delete error:", error)
-        alert("Failed to delete.")
+    const ok = confirm('Are you sure?')
+    if (!ok) return
+    try {
+      const res = await axios.delete(`${API}/listings/${id}`, { withCredentials: true });
+      console.log("responce data", res.data)
+      if (res.status === 200) {
+        navigate("/")
+        toast.error('Listing deleted successfully!')
       }
+    } catch (error) {
+      console.error("Delete error:", error)
+      alert("Failed to delete.")
     }
+
   }
 
   const {
@@ -81,7 +71,7 @@ const Display_Content = () => {
     try {
       const res = await axios.post(
         `${API}/listings/${id}/reviews`,
-        { review: data }
+        { review: data }, { withCredentials: true }
       )
       setContent((prev) => ({
         ...prev, reviews: [...prev.reviews, res.data.review]
@@ -96,8 +86,8 @@ const Display_Content = () => {
   }, [id, reset]); // These are the external variables the function actually depends on
   const handleDeleteReviews = async (reviewId) => {
     try {
-      const res = await axios.delete(`${API}/listings/${id}/reviews/${reviewId}`)
-      console.log(res, 'data')
+      const res = await axios.delete(`${API}/listings/${id}/reviews/${reviewId}`, { withCredentials: true })
+
       setContent((prev) => ({
         reviews: prev.reviews.filter(r => r._id !== reviewId)
       }))

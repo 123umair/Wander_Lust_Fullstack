@@ -7,37 +7,43 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   // Airbnb theme color: #FF5A5F
-  const activeStyle = "text-[#FF5A5F] font-bold border-b-2 border-[#FF5A5F] pb-1 transition-all duration-300";
+  const activeStyle = "text-[#FF5A5F] font-bold border-b-2 border-[#FF5A5F] pb-1 transition-all duration-100";
   const normalStyle = "text-gray-600 hover:text-[#FF5A5F] font-medium transition-all duration-300";
 
   return (
     <nav className="bg-white shadow-md sticky top-0 z-50 transition-all duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
+        <div className=" flex justify-between   h-16">
 
           {/* Logo and Nav Links Left Side */}
-          <div className="flex items-center space-x-8">
-            <Link to="/" className="flex items-center group">
-              {/* Logo from assets */}
-              <img src={logo} alt="Logo" className="h-10 w-auto transition-transform group-hover:scale-110" />
-            </Link>
+          <div className="flex  items-center justify-between w-full space-x-8 ">
+            <div className='flex space-x-8'>
+              <Link to="/" className="flex items-center group">
+                {/* Logo from assets */}
+                <img src={logo} alt="Logo" className="h-10 w-auto transition-transform group-hover:scale-110" />
+              </Link>
 
-            {/* Desktop Menu (Logo ke bilkul sath) */}
-            <div className="hidden md:flex items-center space-x-6">
-              <NavLink
-                to="/"
-                className={({ isActive }) => isActive ? activeStyle : normalStyle}
-              >
-                All Listings
-              </NavLink>
+              {/* Desktop Menu (Logo ke bilkul sath) */}
+              <div className="hidden md:flex items-center space-x-6">
+                <NavLink
+                  to="/"
+                  className={({ isActive }) => isActive ? activeStyle : normalStyle}
+                >
+                  All Listings
+                </NavLink>
 
-              <NavLink
-                to="/listings/create_listing"
-                className={({ isActive }) => isActive ? activeStyle : normalStyle}
-              >
-                + New Listing
-              </NavLink>
+                <NavLink
+                  to="/listings/create_listing"
+                  className={({ isActive }) => isActive ? activeStyle : normalStyle}
+                >
+                  + New Listing
+                </NavLink>
+              </div>
 
+
+
+            </div>
+            <div className=' hidden md:flex  items-center justify-center space-x-8'>
               <NavLink
                 to="/signup"
                 className={({ isActive }) => isActive ? activeStyle : normalStyle}
@@ -50,7 +56,12 @@ const Navbar = () => {
               >
                 login
               </NavLink>
-
+              <NavLink
+                to="/"
+                className={({ isActive }) => isActive ? activeStyle : normalStyle}
+              >
+                logout
+              </NavLink>
             </div>
           </div>
 
@@ -74,7 +85,7 @@ const Navbar = () => {
 
       {/* Animated Mobile Menu */}
       <div
-        className={`md:hidden overflow-hidden transition-all duration-500 ease-in-out ${isOpen ? 'max-h-60 opacity-100 border-t' : 'max-h-0 opacity-0'
+        className={`md:hidden overflow-scroll-y transition-all duration-500 ease-in-out ${isOpen ? 'max-h-60 opacity-100 border-t' : 'max-h-0 opacity-0'
           }`}
       >
         <div className="px-4 py-4 space-y-2 bg-gray-50">
@@ -109,6 +120,14 @@ const Navbar = () => {
               }`}
           >
             SignIn
+          </NavLink>
+          <NavLink
+            to="/"
+            onClick={() => setIsOpen(false)}
+            className={({ isActive }) => `block px-4 py-3 rounded-xl text-base font-semibold transition-all ${isActive ? 'bg-[#FF5A5F] text-white shadow-md' : 'text-gray-700 hover:bg-white hover:text-[#FF5A5F]'
+              }`}
+          >
+            logout
           </NavLink>
         </div>
       </div>

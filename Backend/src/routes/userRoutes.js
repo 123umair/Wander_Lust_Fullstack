@@ -32,24 +32,7 @@
     }))
    
 
-//     router.get('/check-auth',LoggedIn,(req,res)=>{
-//         try {
-//     console.log("USER:", req.user);
-//    console.log("SESSION:", req.session);
-//    console.log("AUTH:", req.isAuthenticated());
-//    let user = req.user
-//     console.log(user,'user verif')
-//     res.json({success:true,user})
-//         } catch (error) {
-//             res.status(500).json({success:false,error: error.message})
-//         }
-   
-//     })
 
-
-    // the middlewear passport.authenticate() will want some perimeters. one is strategy(where we should use the localstrategy (but the strategy will used in templates like ejs tamplate but using the reactjs its will not use the strategy paremeter hre.),and one is if the user is not authenticated user than it will be redidrect toward login.)
-    // local 1st perimeter,
-    // {failureRedirect:'/login}, 2nd perimeter
 
 
 

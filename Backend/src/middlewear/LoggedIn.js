@@ -1,6 +1,6 @@
 export const LoggedIn = (req,res,next) =>{
-  const user = res.body
-  console.log("user",user)
+  const user = req.user //passport user ka data req.user may rakta hy .
+  console.log("user (authenticate middle wear is executed.)",user)
  if(!req.isAuthenticated())
 {
   return res.status(401).json({
@@ -12,3 +12,4 @@ export const LoggedIn = (req,res,next) =>{
 
   next() // another lines of cod is executed if the use is LoggedIn.
 }
+

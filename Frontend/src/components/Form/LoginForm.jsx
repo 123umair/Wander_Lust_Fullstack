@@ -6,7 +6,7 @@ import { toast } from 'react-toastify'
 import axios from 'axios'
 import { loginSchema } from './LoginSchema'
 
-const LoginForm = () => {
+const LoginForm = ({ setUser }) => {
 
     const API = import.meta.env.VITE_API_URL
     const navigate = useNavigate()
@@ -20,9 +20,13 @@ const LoginForm = () => {
 
 
             if (res) {
+                setUser(res.data.user)
                 navigate('/')
                 toast.success(res.data.message)
                 return
+            }
+            else {
+                setUser(null)
             }
 
 

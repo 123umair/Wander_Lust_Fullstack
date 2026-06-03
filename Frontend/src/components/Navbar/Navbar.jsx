@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 // Assets folder se logo import karein
 import logo from '../../assets/logo.png';
 
-const Navbar = () => {
+
+const Navbar = ({ user }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   // Airbnb theme color: #FF5A5F
@@ -44,24 +45,31 @@ const Navbar = () => {
 
             </div>
             <div className=' hidden md:flex  items-center justify-center space-x-8'>
-              <NavLink
-                to="/signup"
-                className={({ isActive }) => isActive ? activeStyle : normalStyle}
-              >
-                SignUP
-              </NavLink>
-              <NavLink
-                to="/login"
-                className={({ isActive }) => isActive ? activeStyle : normalStyle}
-              >
-                login
-              </NavLink>
-              <NavLink
-                to="/"
-                className={({ isActive }) => isActive ? activeStyle : normalStyle}
-              >
-                logout
-              </NavLink>
+              {
+                user ?
+                  (<> <NavLink
+                    to="/"
+                    className={({ isActive }) => isActive ? activeStyle : normalStyle}
+                  >
+                    logout
+                  </NavLink></>) :
+                  (<>
+                    <NavLink
+                      to="/signup"
+                      className={({ isActive }) => isActive ? activeStyle : normalStyle}
+                    >
+                      SignUP
+                    </NavLink>
+                    <NavLink
+                      to="/login"
+                      className={({ isActive }) => isActive ? activeStyle : normalStyle}
+                    >
+                      login
+                    </NavLink>
+                  </>)
+
+
+              }
             </div>
           </div>
 

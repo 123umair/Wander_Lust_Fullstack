@@ -20,7 +20,7 @@ const Edit_Listing = () => {
   useEffect(() => {
     const fetchContent = async () => {
       try {
-        const res = await axios.get(`${API}/listings/${id}/edit`)
+        const res = await axios.get(`${API}/listings/${id}/edit`, { withCredentials: true })
         reset({ listing: res.data.listing })
       } catch (error) {
         console.log("error", error)
@@ -32,7 +32,7 @@ const Edit_Listing = () => {
   const onSubmit = async (data) => {
 
     try {
-      await axios.patch(`${API}/listings/${id}`, data);
+      await axios.patch(`${API}/listings/${id}`, data, { withCredentials: true });
       alert("Listing updated successfully!");
       navigate(`/listings/${id}`);
     } catch (error) {

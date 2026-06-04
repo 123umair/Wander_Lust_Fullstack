@@ -10,7 +10,7 @@ const Display_Listings = () => {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const res = await axios.get(`${API}/listings`)
+        const res = await axios.get(`${API}/listings`, { withCredentials: true })
         setfetchData(res.data.allListings)
       } catch (error) {
         console.log("Fetch error:", error)

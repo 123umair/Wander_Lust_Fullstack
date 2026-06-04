@@ -31,15 +31,46 @@
         }
     }))
    
-router.get('/check-auth',LoggedIn,(req,res)=>{ 
-    console.log("USER:", req.user);
-    console.log("SESSION:", req.session); 
-    console.log("AUTH:", req.isAuthenticated()); 
-    let user = req.user 
-    console.log(user,'user checking') 
-    res.json({success:true,user}) })
+    router.get('/check-auth',LoggedIn,(req,res)=>{ 
+       
+       
+        let user = req.user 
+        console.log(user,'user checking') 
+        console.log('SESSION',req.session)
+        res.json({success:true,user}) })
+
+    router.post('/logedout',(req,res)=>{
+            console.log("Before logout:", req.user);
+        req.logout((err)=>{
+        if(err){
+            return res.status(500).json({message:'Logout Failed'})
+        }
 
 
+     // Express-Session ko pure tarike se database/memory se mitao
+        req.session.destroy((destroyErr) => {
+            if (destroyErr) {
+                return res.status(500).json({ success: false, message: "Could not destroy session" });
+            }
+
+            // Browser se session cookie ko remove karo
+            res.clearCookie("connect.sid", {
+                path: '/',
+                httpOnly: true,
+                sameSite: 'lax'
+            })
+
+
+            res.clearCookie("connect.sid")
+            return res.json({success:true,message:'user is loggedout'})
+        })
+
+    }
+)
+
+
+
+    })
 
 
  export default router

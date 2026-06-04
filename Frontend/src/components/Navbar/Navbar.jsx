@@ -1,37 +1,26 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 // Assets folder se logo import karein
 import logo from '../../assets/logo.png';
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom';
 
-const Navbar = () => {
+
+const Navbar = ({ user, setUser }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [user, setUser] = useState(null)
+
   const API = import.meta.env.VITE_API_URL
-  const navigate = useNavigate()
-  useEffect(() => {
-    const userChecked = async () => {
-      try {
-        const res = await axios.get(
-          `${API}/check-auth`,
-          { withCredentials: true }
-        );
 
-        if (res.data && res.data.user) {
-          setUser(res.data.user);
-        } else {
-          setUser(null);
-        }
-      } catch (error) {
-        console.log("error", error);
-        setUser(null);
-      }
-    };
+  const logedOut = async () => {
+    try {
+      const res = await axios.post(`${API}/logedout`, {}, { withCredentials: true })
+      setUser(null)
+      console.log(res.data.message)
+    } catch (error) {
+      console.log("error", error.message)
+    }
+  }
 
-    userChecked(); // ✅ correct place
 
-  }, []);
   // Airbnb theme color: #FF5A5F
   const activeStyle = "text-[#FF5A5F] font-bold border-b-2 border-[#FF5A5F] pb-1 transition-all duration-100";
   const normalStyle = "text-gray-600 hover:text-[#FF5A5F] font-medium transition-all duration-300";
@@ -70,16 +59,15 @@ const Navbar = () => {
             </div>
             <div className=' hidden md:flex  items-center justify-center space-x-8'>
               {
-                user ?
-                  (<> <NavLink
-                    to="/"
-                    className={({ isActive }) => isActive ? activeStyle : normalStyle}
+                user ? (
+                  // FIXED: NavLink ko poora hata diya, simple button lagaya hai
+                  <button
+                    onClick={logedOut}
+                    className="text-gray-600 hover:text-[#FF5A5F] font-medium transition-all duration-300 cursor-pointer"
                   >
-                    <button onClick={() => { setUser(null) }}>
-
-                      logout
-                    </button>
-                  </NavLink></>) :
+                    logout
+                  </button>
+                ) :
                   (<>
                     <NavLink
                       to="/signup"

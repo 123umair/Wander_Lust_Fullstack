@@ -31,7 +31,13 @@
         }
     }))
    
-
+router.get('/check-auth',LoggedIn,(req,res)=>{ 
+    console.log("USER:", req.user);
+    console.log("SESSION:", req.session); 
+    console.log("AUTH:", req.isAuthenticated()); 
+    let user = req.user 
+    console.log(user,'user checking') 
+    res.json({success:true,user}) })
 
 
 

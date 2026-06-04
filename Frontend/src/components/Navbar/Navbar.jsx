@@ -1,16 +1,40 @@
-import { useState, } from 'react';
+import { useState, useEffect } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 // Assets folder se logo import karein
 import logo from '../../assets/logo.png';
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom';
 
-
-const Navbar = ({ user }) => {
+const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [user, setUser] = useState(null)
+  const API = import.meta.env.VITE_API_URL
+  const navigate = useNavigate()
+  useEffect(() => {
+    const userChecked = async () => {
+      try {
+        const res = await axios.get(
+          `${API}/check-auth`,
+          { withCredentials: true }
+        );
 
+        if (res.data && res.data.user) {
+          setUser(res.data.user);
+        } else {
+          setUser(null);
+        }
+      } catch (error) {
+        console.log("error", error);
+        setUser(null);
+      }
+    };
+
+    userChecked(); // ✅ correct place
+
+  }, []);
   // Airbnb theme color: #FF5A5F
   const activeStyle = "text-[#FF5A5F] font-bold border-b-2 border-[#FF5A5F] pb-1 transition-all duration-100";
   const normalStyle = "text-gray-600 hover:text-[#FF5A5F] font-medium transition-all duration-300";
-
   return (
     <nav className="bg-white shadow-md sticky top-0 z-50 transition-all duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -51,7 +75,10 @@ const Navbar = ({ user }) => {
                     to="/"
                     className={({ isActive }) => isActive ? activeStyle : normalStyle}
                   >
-                    logout
+                    <button onClick={() => { setUser(null) }}>
+
+                      logout
+                    </button>
                   </NavLink></>) :
                   (<>
                     <NavLink

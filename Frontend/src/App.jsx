@@ -2,7 +2,7 @@ import './App.css'
 import { Suspense, lazy } from 'react'
 import Navbar from './components/Navbar/Navbar'
 import { Routes, Route } from 'react-router-dom'
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import axios from 'axios'
 
 const Footer = lazy(() => import("./components/Footer/Footer"))
@@ -14,13 +14,13 @@ const LoginForm = lazy(() => import('./components/Form/LoginForm'))
 import Form from './components/Form/Form'
 
 function App() {
-  const [user, setUser] = useState(null)
+
 
 
   return (
     <div className="app-container">
 
-      <Navbar user={user} />
+      <Navbar />
 
       <Suspense fallback={<h2>Loading page...</h2>}>
         <main className="main-content">
@@ -30,7 +30,7 @@ function App() {
             <Route path="/listings/create_listing" element={<Form />} />
             <Route path="/listings/:id/edit" element={<Edit_Listing />} />
             <Route path="/signup" element={<SignupForm />} />
-            <Route path="/login" element={<LoginForm setUser={setUser} />} />
+            <Route path="/login" element={<LoginForm />} />
           </Routes>
         </main>
         <Footer />

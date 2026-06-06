@@ -52,7 +52,7 @@ function App() {
             <Route path="/listings/:id" element={<Display_Content />} />
             <Route path="/listings/create_listing" element={<Form />} />
             <Route path="/listings/:id/edit" element={<Edit_Listing />} />
-            <Route path="/signup" element={<SignupForm />} />
+            <Route path="/signup" element={<SignupForm setUser={setUser} />} />
 
             {/* 2. LoginForm ko direct props pass kiya */}
             <Route path="/login" element={<LoginForm setUser={setUser} />} />

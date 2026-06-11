@@ -51,7 +51,7 @@ function App() {
           <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Display_Listings />} />
-            <Route path="/listings/:id" element={<Display_Content />} />
+            <Route path="/listings/:id" element={<Display_Content user={user} />} />
             {/* <Route path="/listings/create_listing" element={<Form />} /> */}
             {/* <Route path="/listings/:id/edit" element={<Edit_Listing />} /> */}
             <Route path="/signup" element={<SignupForm setUser={setUser} />} />

@@ -8,7 +8,7 @@ import { toast } from 'react-toastify'
 
 
 
-const Display_Content = () => {
+const Display_Content = ({ user }) => {
   const { id } = useParams()
   const [content, setContent] = useState(null)
   const navigate = useNavigate()
@@ -181,20 +181,22 @@ const Display_Content = () => {
               <span className="text-gray-500 text-sm"> / night</span>
             </div>
 
-            <div className="flex space-x-2">
-              <Link to={`/listings/${content._id}/edit`}>
-                <button className="bg-gray-900 hover:bg-black text-white text-sm font-bold px-4 py-2 rounded-lg transition active:scale-95">
-                  Edit
-                </button>
-              </Link>
+            {user?._id === content.Owner && (
 
-              <button
-                onClick={handleDelete}
-                className="bg-[#FF5A5F] hover:bg-[#E31C5F] text-white text-sm font-bold px-4 py-2 rounded-lg transition active:scale-95"
-              >
-                Delete
-              </button>
-            </div>
+              <div className="flex space-x-2">
+                <Link to={`/listings/${content._id}/edit`}>
+                  <button className="bg-gray-900 hover:bg-black text-white text-sm font-bold px-4 py-2 rounded-lg transition active:scale-95">
+                    Edit
+                  </button>
+                </Link>
+
+                <button
+                  onClick={handleDelete}
+                  className="bg-[#FF5A5F] hover:bg-[#E31C5F] text-white text-sm font-bold px-4 py-2 rounded-lg transition active:scale-95"
+                >
+                  Delete
+                </button>
+              </div>)}
           </div>
         </div>
       </div>

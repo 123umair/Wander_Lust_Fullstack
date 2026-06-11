@@ -108,7 +108,7 @@ const Navbar = ({ user, setUser }) => {
 
       {/* Animated Mobile Menu */}
       <div
-        className={`md:hidden overflow-scroll-y transition-all duration-500 ease-in-out ${isOpen ? 'max-h-60 opacity-100 border-t' : 'max-h-0 opacity-0'
+        className={`md:hidden overflow-hidden transition-all duration-500 ease-in-out ${isOpen ? 'max-h-60 opacity-100 border-t' : 'max-h-0 opacity-0'
           }`}
       >
         <div className="px-4 py-4 space-y-2 bg-gray-50">
@@ -128,30 +128,35 @@ const Navbar = ({ user, setUser }) => {
           >
             Add New Listing
           </NavLink>
-          <NavLink
-            to="/signup"
-            onClick={() => setIsOpen(false)}
-            className={({ isActive }) => `block px-4 py-3 rounded-xl text-base font-semibold transition-all ${isActive ? 'bg-[#FF5A5F] text-white shadow-md' : 'text-gray-700 hover:bg-white hover:text-[#FF5A5F]'
-              }`}
-          >
-            SignUP
-          </NavLink>
-          <NavLink
-            to="/login"
-            onClick={() => setIsOpen(false)}
-            className={({ isActive }) => `block px-4 py-3 rounded-xl text-base font-semibold transition-all ${isActive ? 'bg-[#FF5A5F] text-white shadow-md' : 'text-gray-700 hover:bg-white hover:text-[#FF5A5F]'
-              }`}
-          >
-            SignIn
-          </NavLink>
-          <NavLink
-            to="/"
-            onClick={() => setIsOpen(false)}
-            className={({ isActive }) => `block px-4 py-3 rounded-xl text-base font-semibold transition-all ${isActive ? 'bg-[#FF5A5F] text-white shadow-md' : 'text-gray-700 hover:bg-white hover:text-[#FF5A5F]'
-              }`}
-          >
-            logout
-          </NavLink>
+          {
+            user ? (
+              // FIXED: NavLink ko poora hata diya, simple button lagaya hai
+              <button
+                onClick={logedOut}
+                className="px-4 py-3 text-gray-600 hover:text-[#FF5A5F] font-medium transition-all duration-300 cursor-pointer"
+              >
+                logout
+              </button>
+            ) :
+              <>
+                <NavLink
+                  to="/signup"
+                  onClick={() => setIsOpen(false)}
+                  className={({ isActive }) => `block px-4 py-3 rounded-xl text-base font-semibold transition-all ${isActive ? 'bg-[#FF5A5F] text-white shadow-md' : 'text-gray-700 hover:bg-white hover:text-[#FF5A5F]'}`}
+                >
+                  SignUP
+                </NavLink>
+                <NavLink
+                  to="/login"
+                  onClick={() => setIsOpen(false)}
+                  className={({ isActive }) => `block px-4 py-3 rounded-xl text-base font-semibold transition-all ${isActive ? 'bg-[#FF5A5F] text-white shadow-md' : 'text-gray-700 hover:bg-white hover:text-[#FF5A5F]'}`}
+                >
+                  SignIn
+                </NavLink>
+              </>
+
+
+          }
         </div>
       </div>
     </nav>

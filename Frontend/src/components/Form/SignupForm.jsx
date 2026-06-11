@@ -5,7 +5,7 @@ import { Navigate, useNavigate } from 'react-router'
 import { toast } from 'react-toastify'
 import { singUP_Schema } from './SignUP_Schema'
 import axios from 'axios'
-const SignupForm = () => {
+const SignupForm = ({ setUser }) => {
     const API = import.meta.env.VITE_API_URL
     const navigate = useNavigate()
 
@@ -16,13 +16,12 @@ const SignupForm = () => {
 
             const res = await axios.post(`${API}/signup`, data, { withCredentials: true })
 
-            toast.success('Account Created Successfully!', {
-                position: "top-right",
-                autoClose: 2000,
-                theme: "colored",
-            })
-
-            navigate('/')
+            if (res.data && res.data.registeredUser) {
+                navigate('/')
+                toast.success('User registered Successfully')
+                setUser(res.data.registeredUser)
+                return
+            }
 
         } catch (error) {
             console.log(error)

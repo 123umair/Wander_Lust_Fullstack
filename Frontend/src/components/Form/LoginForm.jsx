@@ -1,12 +1,16 @@
 import React from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useNavigate } from 'react-router'
+import { useLocation, useNavigate } from 'react-router'
 import { toast } from 'react-toastify'
 import axios from 'axios'
 import { loginSchema } from './LoginSchema'
 
 const LoginForm = ({ setUser }) => {
+    const Navigate = useNavigate()
+    const location = useLocation()
+
+    const from = location.state?.from?.pathname || '/';
 
     const API = import.meta.env.VITE_API_URL
     const navigate = useNavigate()
@@ -21,7 +25,8 @@ const LoginForm = ({ setUser }) => {
 
             if (res) {
                 setUser(res.data.user)
-                navigate('/')
+                // LOGIN HONE KE BAAD WAPAS USSI PAGE PAR BHEJ DO!
+                navigate(from, { replace: true });
                 toast.success(res.data.message)
                 return
             }
@@ -72,7 +77,7 @@ const LoginForm = ({ setUser }) => {
                     {/* Username */}
                     <div>
                         <label
-                            htmlFor="Username"
+                            htmlFor="username"
                             className="block text-sm font-semibold text-gray-800"
                         >
                             Username

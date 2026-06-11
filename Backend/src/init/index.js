@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import data from "./data.js";
 import { Listing } from '../Models/Listing.js'
 
 
@@ -14,14 +13,4 @@ main()
     console.log("Connection is successfull")
 })
 
-const initData = data
 
-
-
-const initDb = async() =>{
-    await Listing.deleteMany({});
-    await Listing.insertMany(initData.data)
-    console.log("data was initialized")
-}
-
-initDb()

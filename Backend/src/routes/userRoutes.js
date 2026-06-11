@@ -8,8 +8,17 @@
     try {
         let {username,email,password} = req.body
     const newUser =  new User({username,email})
-    const registeredUser = await User.register(newUser,password)
-    res.json({success:true,message:"user registered"})
+    const registeredUser = await User.register(newUser,password) 
+    //plugin of passport-local-mongoose, hashing the password,verifies if the username is already taken,creates and saves the new user document with the generated hash and salt fields 
+    // 2. Log the user in directly using Passport's req.login()
+    // Log the user in directly using Passport's req.login()
+        req.login(registeredUser, (err) => {
+            if (err) {
+                return next(err); 
+            }
+            // Send the response ONLY after the session is successfully written
+            return res.json({ success: true, message: "user registered", registeredUser });
+        });
     } catch (error) {
         console.log(error)
         res.status(500).json({error:err.message})
@@ -18,7 +27,7 @@
 
 
     //passport.authenticate() is a middlwear where  he can authenticate the user that it will exist in the database or not therefore for the database work we also use the async methods.
-    // addded user in the database only 
+    
     router.post('/login',
         passport.authenticate('local'),
         wrapAsync(async(req,res)=>{

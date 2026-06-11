@@ -41,6 +41,7 @@ router.post(
   wrapAsync(async(req, res) => {
     console.log("hitting the routes")
     const newListing = new Listing(req.body.listing);
+    newListing.Owner = req.user._id // save new user information
     await newListing.save();
     res.json({ success: true });
   })
@@ -51,7 +52,10 @@ router.get(
   "/:id",
   wrapAsync(async (req, res) => {
     const { id } = req.params;
-    const listing = await Listing.findById(id).populate('reviews');
+    const listing = await Listing.findById(id)
+    .populate('reviews')
+    .populate("Owner");
+
     if(!listing)
     {
      return res.json({success:false,message:"Listing you requested for doest not exist"})

@@ -54,7 +54,11 @@ router.get(
     const { id } = req.params;
     const listing = await Listing.findById(id)
     .populate('reviews')
-    .populate("Owner");
+    .populate("Owner")
+    .populate({
+      path:"reviews",
+      populate:{path:'author'} // Yeh reviews ke andar ghus kar author ka naam nikalega
+    })
 
     if(!listing)
     {

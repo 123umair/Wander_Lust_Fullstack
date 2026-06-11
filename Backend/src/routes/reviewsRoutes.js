@@ -26,9 +26,14 @@ next()
 router.post('/',validateReviews,wrapAsync(async(req,res)=>{
 const listing = await Listing.findById(req.params.id) //find out the listing where request the reviews.
 const newReview = new reviewModel(req.body.review)
+newReview.author= req.user._id // this is important
 await newReview.save()
 listing.reviews.push(newReview._id) //here push the newReview._id to the reviews array in a listing.
 await listing.save()
+
+// 🔥 FIXED: Frontend ko bhejne se pehle author ko populate karein
+  await newReview.populate("author");
+  
 res.json({review:newReview})
 
 // .save() method is used for if we can any change make in the existing database.

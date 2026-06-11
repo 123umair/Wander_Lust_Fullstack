@@ -12,7 +12,7 @@ const Display_Content = ({ user }) => {
   const { id } = useParams()
   const [content, setContent] = useState(null)
   const navigate = useNavigate()
-
+  console.log("user", user)
   const API = import.meta.env.VITE_API_URL
 
 
@@ -210,7 +210,10 @@ const Display_Content = ({ user }) => {
       <hr className='bg-gray-500 h-0.5 border-none' />
       <div>
 
-        <form action="" onSubmit={handleSubmit(submitReview)} method='POST'>
+
+        {/* { Review Form } */}
+
+        {user && (<form action="" onSubmit={handleSubmit(submitReview)} method='POST'>
           <div className='mt-2'>
             <p className='mt-2'>Leave a Review</p>
             <div className='mt-2'>
@@ -236,8 +239,9 @@ const Display_Content = ({ user }) => {
               Submit
             </button>
           </div>
-        </form>
+        </form>)}
         <div className="mt-6">
+
           <h2 className="text-xl font-semibold mb-4">All Reviews</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -251,10 +255,10 @@ const Display_Content = ({ user }) => {
                   <div className="mb-2">
                     <div className="flex items-center gap-2">
                       <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-white font-bold ">
-                        U
+                        {(review.author?.username || "U").charAt(0)}
                       </div>
                       <div>
-                        <p className="text-sm font-semibold">User</p>
+                        <p className="text-sm font-semibold">{review.author?.username}</p>
                         <p className="text-xs text-gray-500">
                           {new Date(review.createdAt).toDateString()}
                         </p>

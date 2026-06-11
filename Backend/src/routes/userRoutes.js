@@ -8,8 +8,8 @@
     try {
         let {username,email,password} = req.body
     const newUser =  new User({username,email})
-    const registeredUser = await User.register(newUser,password) //plugin of passport-local-mongoose, hashing the password,verifies if the username is already taken,creates and saves the new user document with the generated hash and salt fields 
-    
+    const registeredUser = await User.register(newUser,password) 
+    //plugin of passport-local-mongoose, hashing the password,verifies if the username is already taken,creates and saves the new user document with the generated hash and salt fields 
     // 2. Log the user in directly using Passport's req.login()
     // Log the user in directly using Passport's req.login()
         req.login(registeredUser, (err) => {

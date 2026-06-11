@@ -72,7 +72,7 @@ const LoginForm = ({ setUser }) => {
                     {/* Username */}
                     <div>
                         <label
-                            htmlFor="Username"
+                            htmlFor="username"
                             className="block text-sm font-semibold text-gray-800"
                         >
                             Username

@@ -121,10 +121,43 @@ const Display_Content = () => {
         <div className="p-5">
           <div className="flex justify-between items-start">
             <div>
-              <h2 className="text-xl font-bold text-gray-900">{content.title}</h2>
-              <p className="text-gray-500 text-sm">
+              <h2 className="text-2xl font-bold text-gray-900">
+                {content.title}
+              </h2>
+
+              <p className="text-gray-500 text-sm mt-1">
                 {content.location}, {content.country}
               </p>
+
+              {/* Airbnb Style Host Section */}
+              <div className="mt-5 flex items-center gap-4">
+
+                <div className="relative">
+                  <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#FF5A5F] to-[#FF385C] flex items-center justify-center text-white text-xl font-bold shadow-md">
+                    {(content.owner?.username ||
+                      content.Owner?.username ||
+                      "H")[0].toUpperCase()}
+                  </div>
+
+                  <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-white rounded-full shadow flex items-center justify-center border">
+                    ⭐
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="font-semibold text-gray-900">
+                    Hosted by{" "}
+                    {content.owner?.username ||
+                      content.Owner?.username ||
+                      "Host"}
+                  </h3>
+
+                  <p className="text-sm text-gray-500">
+                    Superhost · Verified Host
+                  </p>
+                </div>
+
+              </div>
             </div>
             <div className="flex items-center space-x-1 text-sm font-semibold">
               <span className="text-[#FF5A5F]">★</span>

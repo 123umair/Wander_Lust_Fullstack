@@ -54,7 +54,11 @@ router.get(
     const { id } = req.params;
     const listing = await Listing.findById(id)
     .populate('reviews')
-    .populate("Owner");
+    .populate("Owner")
+    .populate({
+      path:"reviews",
+      populate:{path:'author'} // Yeh reviews ke andar ghus kar author ka naam nikalega (nested populate)
+    })
 
     if(!listing)
     {
@@ -93,7 +97,21 @@ router.delete(
   "/:id",
   LoggedIn,
   wrapAsync(async (req, res) => {
+    
     const { id } = req.params;
+
+    const listing = await Listing.findById(id) // extract listing from the database
+    
+    // 2. CHECK LOGIC: req.user._id ko listing.Owner se compare karein
+    if(!listing.Owner.equals(req.user._id)){
+      return res.status(403).json({
+        success:false,
+        message:"Your are not authorized"
+      })
+    }
+
+    // Mongoose ObjectIDs ko compare karne ke liye '.equals()' use hota hai
+    
     await Listing.findByIdAndDelete(id);
     res.json({ success: true, message: "Deleted successfully" });
   })

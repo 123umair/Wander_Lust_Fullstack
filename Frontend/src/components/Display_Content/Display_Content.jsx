@@ -8,11 +8,11 @@ import { toast } from 'react-toastify'
 
 
 
-const Display_Content = () => {
+const Display_Content = ({ user }) => {
   const { id } = useParams()
   const [content, setContent] = useState(null)
   const navigate = useNavigate()
-
+  console.log("user", user)
   const API = import.meta.env.VITE_API_URL
 
 
@@ -181,20 +181,22 @@ const Display_Content = () => {
               <span className="text-gray-500 text-sm"> / night</span>
             </div>
 
-            <div className="flex space-x-2">
-              <Link to={`/listings/${content._id}/edit`}>
-                <button className="bg-gray-900 hover:bg-black text-white text-sm font-bold px-4 py-2 rounded-lg transition active:scale-95">
-                  Edit
-                </button>
-              </Link>
+            {user?._id === content.Owner && (
 
-              <button
-                onClick={handleDelete}
-                className="bg-[#FF5A5F] hover:bg-[#E31C5F] text-white text-sm font-bold px-4 py-2 rounded-lg transition active:scale-95"
-              >
-                Delete
-              </button>
-            </div>
+              <div className="flex space-x-2">
+                <Link to={`/listings/${content._id}/edit`}>
+                  <button className="bg-gray-900 hover:bg-black text-white text-sm font-bold px-4 py-2 rounded-lg transition active:scale-95">
+                    Edit
+                  </button>
+                </Link>
+
+                <button
+                  onClick={handleDelete}
+                  className="bg-[#FF5A5F] hover:bg-[#E31C5F] text-white text-sm font-bold px-4 py-2 rounded-lg transition active:scale-95"
+                >
+                  Delete
+                </button>
+              </div>)}
           </div>
         </div>
       </div>
@@ -208,7 +210,10 @@ const Display_Content = () => {
       <hr className='bg-gray-500 h-0.5 border-none' />
       <div>
 
-        <form action="" onSubmit={handleSubmit(submitReview)} method='POST'>
+
+        {/* { Review Form } */}
+
+        {user && (<form action="" onSubmit={handleSubmit(submitReview)} method='POST'>
           <div className='mt-2'>
             <p className='mt-2'>Leave a Review</p>
             <div className='mt-2'>
@@ -234,8 +239,9 @@ const Display_Content = () => {
               Submit
             </button>
           </div>
-        </form>
+        </form>)}
         <div className="mt-6">
+
           <h2 className="text-xl font-semibold mb-4">All Reviews</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -249,10 +255,10 @@ const Display_Content = () => {
                   <div className="mb-2">
                     <div className="flex items-center gap-2">
                       <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-white font-bold ">
-                        U
+                        {(review.author?.username || "U").charAt(0)}
                       </div>
                       <div>
-                        <p className="text-sm font-semibold">User</p>
+                        <p className="text-sm font-semibold">{review.author?.username}</p>
                         <p className="text-xs text-gray-500">
                           {new Date(review.createdAt).toDateString()}
                         </p>
@@ -270,7 +276,7 @@ const Display_Content = () => {
                     {review.comment}
                   </p>
 
-                  <button className="bg-white hover:bg-red-500 text-red-500 hover:text-white text-sm font-bold px-4 py-2 rounded-lg transition active:scale-95 cursor-pointer border border-red-500 mt-5" onClick={() => (handleDeleteReviews(review._id))}>Delete</button>
+                  {user?._id === review.author._id && <button className="bg-white hover:bg-red-500 text-red-500 hover:text-white text-sm font-bold px-4 py-2 rounded-lg transition active:scale-95 cursor-pointer border border-red-500 mt-5" onClick={() => (handleDeleteReviews(review._id))}>Delete</button>}
 
                 </div>
 

@@ -33,8 +33,9 @@ await listing.save()
 
 // 🔥 FIXED: Frontend ko bhejne se pehle author ko populate karein
   await newReview.populate("author");
-  
-res.json({review:newReview})
+
+ res.json({review:newReview})
+ console.log('review',newReview)
 
 // .save() method is used for if we can any change make in the existing database.
 
@@ -43,10 +44,16 @@ res.json({review:newReview})
 
 // delete reviews route 
 router.delete('/:reviewId',wrapAsync(async(req,res)=>{
-
+    
     const {id,reviewId} =req.params //fetching ids.
-    await Listing.findByIdAndUpdate(id,{$pull:  {reviews:reviewId}})// deleted or removed from the listings
-    await reviewModel.findByIdAndDelete(reviewId) //delete the review from the reviews model 
+    
+    let review = await reviewModel.findById(reviewId)
+   if (!review.author._id.equals(req.user._id))
+   {
+     return res.status(403).json({success:false,message:"Your not the author of this review."})
+   }
+   await Listing.findByIdAndUpdate(id,{$pull:  {reviews:reviewId}})// deleted or removed from the listings
+   await reviewModel.findByIdAndDelete(reviewId) //delete the review from the reviews model 
    res.json({sucess:true})
 }))
 export default router

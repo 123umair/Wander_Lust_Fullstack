@@ -276,7 +276,7 @@ const Display_Content = ({ user }) => {
                     {review.comment}
                   </p>
 
-                  <button className="bg-white hover:bg-red-500 text-red-500 hover:text-white text-sm font-bold px-4 py-2 rounded-lg transition active:scale-95 cursor-pointer border border-red-500 mt-5" onClick={() => (handleDeleteReviews(review._id))}>Delete</button>
+                  {user?._id === review.author._id && <button className="bg-white hover:bg-red-500 text-red-500 hover:text-white text-sm font-bold px-4 py-2 rounded-lg transition active:scale-95 cursor-pointer border border-red-500 mt-5" onClick={() => (handleDeleteReviews(review._id))}>Delete</button>}
 
                 </div>
 

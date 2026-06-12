@@ -57,7 +57,7 @@ router.get(
     .populate("Owner")
     .populate({
       path:"reviews",
-      populate:{path:'author'} // Yeh reviews ke andar ghus kar author ka naam nikalega
+      populate:{path:'author'} // Yeh reviews ke andar ghus kar author ka naam nikalega (nested populate)
     })
 
     if(!listing)

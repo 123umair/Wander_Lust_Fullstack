@@ -1,22 +1,18 @@
 import express from "express";
 const router = express.Router();
-
-import { Listing } from "../Models/Listing.js";
 import { wrapAsync } from "../../utils/wrapAsync.js";
 import { ExpressError } from "../../utils/ExpressError.js";
 import { listingSchema } from "../../schemas/schema.js";
-import { reviewModel } from "../Models/reviews.js";
 import { LoggedIn } from "../middlewear/LoggedIn.js";
-import passport from "passport";
+
+import { indexListing, showListing, createListing, editListing, updateListing, deleteListing } from "../Controllers/listing.js";
 // validation middleware
 const validateListing = (req, res, next) => {
   const result = listingSchema.safeParse(req.body);
-
   if (!result.success) {
     const errorMsg = result.error.issues.map((el) => el.message).join(", ");
     return next(new ExpressError(400, errorMsg));
   }
-
   req.body = result.data;
   next();
 };
@@ -26,56 +22,27 @@ const validateListing = (req, res, next) => {
 // Index Route
 router.get(
   "/",
-  wrapAsync(async (req, res) => {
-  
-    const allListings = await Listing.find({});
-    res.json({ allListings });
-  })
+  wrapAsync(indexListing)
 );
 
 // Create Route
 router.post(
-  "/create_listing",  
+  "/create_listing",
   validateListing,
   LoggedIn,
-  wrapAsync(async(req, res) => {
-    console.log("hitting the routes")
-    const newListing = new Listing(req.body.listing);
-    newListing.Owner = req.user._id // save new user information
-    await newListing.save();
-    res.json({ success: true });
-  })
+  wrapAsync(createListing)
 );
 
 // Show Route
 router.get(
   "/:id",
-  wrapAsync(async (req, res) => {
-    const { id } = req.params;
-    const listing = await Listing.findById(id)
-    .populate('reviews')
-    .populate("Owner")
-    .populate({
-      path:"reviews",
-      populate:{path:'author'} // Yeh reviews ke andar ghus kar author ka naam nikalega (nested populate)
-    })
-
-    if(!listing)
-    {
-     return res.json({success:false,message:"Listing you requested for doest not exist"})
-    }
-    return res.json({success:true, listing });
-  })
+  wrapAsync(showListing)
 );
 
 // Edit Route
 router.get(
   "/:id/edit",
-  wrapAsync(async (req, res) => {
-    const { id } = req.params;
-    const listing = await Listing.findById(id);
-    res.json({ listing });
-  })
+  wrapAsync(editListing)
 );
 
 // Update Route
@@ -83,38 +50,14 @@ router.patch(
   "/:id",
   validateListing,
   LoggedIn,
-  wrapAsync(async (req, res) => {
-    const { id } = req.params;
-    console.log(req.body,'request body')
-    await Listing.findByIdAndUpdate(id, { ...req.body.listing });
-
-    res.json({ success: true, message: "Listing Updated Successfully!" });
-  })
+  wrapAsync(updateListing)
 );
 
 // Delete Route
 router.delete(
   "/:id",
   LoggedIn,
-  wrapAsync(async (req, res) => {
-    
-    const { id } = req.params;
-
-    const listing = await Listing.findById(id) // extract listing from the database
-    
-    // 2. CHECK LOGIC: req.user._id ko listing.Owner se compare karein
-    if(!listing.Owner.equals(req.user._id)){
-      return res.status(403).json({
-        success:false,
-        message:"Your are not authorized"
-      })
-    }
-
-    // Mongoose ObjectIDs ko compare karne ke liye '.equals()' use hota hai
-    
-    await Listing.findByIdAndDelete(id);
-    res.json({ success: true, message: "Deleted successfully" });
-  })
+  wrapAsync(deleteListing)
 );
 
 

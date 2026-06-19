@@ -1,6 +1,5 @@
 import { Listing } from "../Models/Listing.js";
-import passport from "passport";
-import { reviewModel } from "../Models/reviews.js";
+
 // index listings 
 export const indexListing = async (req, res) => {
 

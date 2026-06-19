@@ -1,6 +1,5 @@
 import { reviewModel } from "../Models/reviews.js";
 import { Listing } from "../Models/Listing.js";
-import { reviewModel } from '../Models/reviews.js'
 
 
 // create reviews

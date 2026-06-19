@@ -10,7 +10,7 @@ export const indexListing = async (req, res) => {
 
 // Create logic
 export const createListing = async (req, res) => {
-    console.log("hitting the routes")
+    console.log("hitting the routes , req body created", req.body)
     const newListing = new Listing(req.body.listing);
     newListing.Owner = req.user._id // save new user information
     await newListing.save();

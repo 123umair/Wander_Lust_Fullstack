@@ -98,7 +98,8 @@ const Display_Content = ({ user }) => {
   }
 
   if (!content) return <div className="text-center py-10 text-gray-500">Loading...</div>
-
+  const ownerId = content.Owner?._id || content.Owner;
+  const isListingOwner = user?._id && ownerId && user._id === ownerId;
 
   return (
     /* Parent padding kam kar di (py-6) */
@@ -181,7 +182,7 @@ const Display_Content = ({ user }) => {
               <span className="text-gray-500 text-sm"> / night</span>
             </div>
 
-            {user?._id === content.Owner && (
+            {isListingOwner && (
 
               <div className="flex space-x-2">
                 <Link to={`/listings/${content._id}/edit`}>

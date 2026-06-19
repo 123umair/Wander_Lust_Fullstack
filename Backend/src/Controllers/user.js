@@ -50,7 +50,7 @@ export const authUser = (req, res) => {
 
 
 
-// Loggin User
+// Logout User
 
 export const logOutUser = (req, res) => {
     console.log("Before logout:", req.user);

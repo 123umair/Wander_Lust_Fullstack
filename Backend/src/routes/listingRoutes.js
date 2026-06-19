@@ -33,11 +33,12 @@ router.post(
   wrapAsync(createListing)
 );
 
-// Show Route
-router.get(
-  "/:id",
-  wrapAsync(showListing)
-);
+
+router.route("/:id")
+  .get(wrapAsync(showListing))
+  .patch(validateListing, LoggedIn, wrapAsync(updateListing))
+  .delete(LoggedIn, wrapAsync(deleteListing))
+
 
 // Edit Route
 router.get(
@@ -45,20 +46,6 @@ router.get(
   wrapAsync(editListing)
 );
 
-// Update Route
-router.patch(
-  "/:id",
-  validateListing,
-  LoggedIn,
-  wrapAsync(updateListing)
-);
-
-// Delete Route
-router.delete(
-  "/:id",
-  LoggedIn,
-  wrapAsync(deleteListing)
-);
 
 
 

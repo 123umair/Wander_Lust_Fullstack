@@ -4,6 +4,9 @@ import { wrapAsync } from "../../utils/wrapAsync.js";
 import { ExpressError } from "../../utils/ExpressError.js";
 import { listingSchema } from "../../schemas/schema.js";
 import { LoggedIn } from "../middlewear/LoggedIn.js";
+import multer from 'multer';
+import { storage } from "../../cloudConfig.js";
+const upload = multer({ storage });  // now here by this line the multer will stored the file in the cloudinary storage
 
 import { indexListing, showListing, createListing, editListing, updateListing, deleteListing } from "../Controllers/listing.js";
 // validation middleware

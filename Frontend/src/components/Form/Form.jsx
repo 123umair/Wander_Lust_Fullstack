@@ -9,12 +9,7 @@ const Form = () => {
   const API = import.meta.env.VITE_API_URL
   const onSubmit = async (data) => {
     try {
-      // const res = await fetch(`${API}/listings/create_listing`, {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify(data)
+
       const res = await axios.post(`${API}/listings/create_listing`, data, { withCredentials: true })
       if (res) {
         navigate('/')
@@ -48,7 +43,7 @@ const Form = () => {
         </div>
 
         {/* Keeping your exact format: action and method same */}
-        <form onSubmit={handleSubmit(onSubmit)} method="POST" className="space-y-6">
+        <form onSubmit={handleSubmit(onSubmit)} method="POST" className="space-y-6" enctype='multipart/form-data'>
 
           {/* Title */}
           <div>
@@ -76,17 +71,19 @@ const Form = () => {
           </div>
 
 
-          {/* Image URL */}
+          {/* Image File Upload Input */}
           <div>
-            <label htmlFor="image" className="block text-sm font-semibold text-gray-800">Image URL</label>
+            <label htmlFor="image" className="block text-sm font-semibold text-gray-800">Upload Image File</label>
             <input
-
+              type="file" // 🔥 Text ki jagah File input banaya
               id="image"
-              {...register('listing.image.url')}
-              placeholder="https://images.unsplash.com/..."
-              className="mt-1 block w-full px-4 py-3 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#FF5A5F] focus:border-transparent transition-all"
+              accept="image/*" // Sirf images select karne ki permission dega
+              {...register('listing.image')}
+              className="mt-1 block w-full px-4 py-3 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#FF5A5F] focus:border-transparent transition-all 
+  file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold 
+  file:bg-gray-300 file:text-black hover:file:bg-gray-400 file:cursor-pointer"
             />
-            {errors.listing?.image?.url && <p className='text-red-600'>{errors.listing.image.url.message}</p>}
+            {errors.listing?.image && <p className='text-red-600 text-sm mt-1'>{errors.listing.image.message}</p>}
           </div>
 
           {/* Price & Country Row: Responsive Grid */}

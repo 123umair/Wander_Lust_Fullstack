@@ -3,7 +3,7 @@ import { Listing } from "../Models/Listing.js";
 // index listings 
 export const indexListing = async (req, res) => {
 
-    const allListings = await Listing.find({});
+    const allListings = await Listing.find({}).populate("reviews");
     res.json({ allListings });
 }
 

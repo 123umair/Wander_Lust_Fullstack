@@ -12,7 +12,7 @@ const Display_Content = ({ user }) => {
   const { id } = useParams()
   const [content, setContent] = useState(null)
   const navigate = useNavigate()
-  console.log("user", user)
+
   const API = import.meta.env.VITE_API_URL
 
   useEffect(() => {
@@ -21,7 +21,7 @@ const Display_Content = ({ user }) => {
         const res = await axios.get(`${API}/listings/${id}`, { withCredentials: true })
         setContent(res.data.listing)
         const data = res.data
-        console.log('data', data)
+
         if (!data.listing) {
           toast.error(data.message)
           navigate("/")

@@ -9,8 +9,26 @@ const Form = () => {
   const API = import.meta.env.VITE_API_URL
   const onSubmit = async (data) => {
     try {
+      console.log('data', data)
+      const formData = new FormData()  // a special object instance of the browser that allow raw files binary (images/videos) with plan text.
+      //append the text fields
+      formData.append('listing[title]', data.listing.title)
+      formData.append('listing[description]', data.listing.description)
+      formData.append('listing[price]', Number(data.listing.price))
+      formData.append('listing[country]', data.listing.country)
+      formData.append('listing[location]', data.listing.location)
 
-      const res = await axios.post(`${API}/listings/create_listing`, data, { withCredentials: true })
+
+      // check the image file and add in the formData
+      if (data.listing.image && data.listing.image[0]) {
+        formData.append('listing[image]', data.listing.image[0])
+      }
+      console.log(formData, 'formdata')
+
+      const res = await axios.post(`${API}/listings/create_listing`, formData, {
+        withCredentials: true,
+
+      })
       if (res) {
         navigate('/')
         return toast.success('Listing Successfully Added.!')
@@ -22,7 +40,8 @@ const Form = () => {
         return
       }
     } catch (error) {
-      console.log(error)
+      console.log("Message:", error.message)
+
     }
   }
   const { register, handleSubmit, formState } = useForm({ resolver: zodResolver(formSchema) })
@@ -43,7 +62,7 @@ const Form = () => {
         </div>
 
         {/* Keeping your exact format: action and method same */}
-        <form onSubmit={handleSubmit(onSubmit)} method="POST" className="space-y-6" enctype='multipart/form-data'>
+        <form onSubmit={handleSubmit(onSubmit)} method="POST" className="space-y-6" encType='multipart/form-data'>
 
           {/* Title */}
           <div>

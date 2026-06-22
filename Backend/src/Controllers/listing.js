@@ -10,11 +10,21 @@ export const indexListing = async (req, res) => {
 
 // Create logic
 export const createListing = async (req, res) => {
-    console.log("hitting the routes , req body created", req.body)
-    const newListing = new Listing(req.body.listing);
-    newListing.Owner = req.user._id // save new user information
+    // 1. Extract the data from the Cloudinary.
+    if (!req.file) {
+        return res.status(400).json({ message: 'Image upload is required.' })
+    }
+
+    const url = req.file.path; // cloudinary secure url
+    const filename = req.file.filename // cloudinary public id filename
+    const newListingData = {
+        ...req.body.listing,
+        image: { url, filename },
+        Owner: req.user._id
+    };
+    const newListing = new Listing(newListingData)
     await newListing.save();
-    res.json({ success: true });
+    return res.status(201).json({ success: true });
 }
 
 // show listing

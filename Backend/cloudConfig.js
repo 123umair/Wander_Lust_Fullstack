@@ -1,3 +1,6 @@
+import dotenv from 'dotenv'
+dotenv.config()
+
 import { v2 as cloudinary } from 'cloudinary'
 import { CloudinaryStorage } from 'multer-storage-cloudinary'
 
@@ -15,7 +18,7 @@ const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
         folder: 'WanderLust_DEV',
-        allowedFormats: ['png', 'jpg', 'jpeg'],
+        allowed_formats: ['png', 'jpg', 'jpeg'],
     },
 });
 

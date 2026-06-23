@@ -22,6 +22,7 @@ const Display_Listings = () => {
     fetchPost()
   }, [API])
 
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* 1. First Heading */}
@@ -36,42 +37,49 @@ const Display_Listings = () => {
       ) : fetchdata.length > 0 ? (
         // B. If listing is available
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {fetchdata.map((item) => (
-            <Link
-              to={`/listings/${item._id}`}
-              key={item._id}
-              className="group cursor-pointer flex flex-col space-y-2"
-            >
-              <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-white">
-                <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300 z-10"></div>
-                <img
-                  src={item.image?.url || "https://images.unsplash.com/photo-1501785888041-af3ef285b470"}
-                  alt={item.title}
-                  className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
-                />
-              </div>
-
-              <div className="flex flex-col">
-                <div className="flex justify-between items-center">
-                  <h3 className="font-bold text-[15px] text-gray-900 truncate">
-                    {item.location}, {item.country}
-                  </h3>
-                  <div className="flex items-center space-x-1">
-                    <span className="text-sm">★</span>
-                    <span className="text-sm text-gray-600">4.9</span>
-                  </div>
+          {fetchdata.map((item) => {
+            const reviewsArray = item?.reviews || [];
+            const totalReviews = reviewsArray.length || 0
+            const averageRating = totalReviews > 0 ?
+              (reviewsArray.reduce((acc, r) => acc + Number(r.rating), 0) / totalReviews).toFixed(1) : 0.0
+            return (
+              <Link
+                to={`/listings/${item._id}`}
+                key={item._id}
+                className="group cursor-pointer flex flex-col space-y-2"
+              >
+                <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-white">
+                  <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300 z-10"></div>
+                  <img
+                    src={item.image?.url || "https://images.unsplash.com/photo-1501785888041-af3ef285b470"}
+                    alt={item.title}
+                    className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+                  />
                 </div>
 
-                <p className="text-gray-500 text-sm truncate">{item.title}</p>
-                <p className="text-gray-500 text-sm">Added recently</p>
+                <div className="flex flex-col">
+                  <div className="flex justify-between items-center">
+                    <h3 className="font-bold text-[15px] text-gray-900 truncate">
+                      {item.location}, {item.country}
+                    </h3>
+                    <div className="flex items-center space-x-1">
+                      <span className="text-sm">★</span>
+                      <span className="text-sm text-gray-600">{averageRating}</span>
+                    </div>
+                  </div>
 
-                <p className="mt-1 text-sm text-gray-900">
-                  <span className="font-bold">₹{item.price ? item.price.toLocaleString('en-IN') : '0'}</span> night
-                </p>
-              </div>
-            </Link>
-          ))}
+                  <p className="text-gray-500 text-sm truncate">{item.title}</p>
+                  <p className="text-gray-500 text-sm">Added recently</p>
+
+                  <p className="mt-1 text-sm text-gray-900">
+                    <span className="font-bold">₹{item.price ? item.price.toLocaleString('en-IN') : '0'}</span> night
+                  </p>
+                </div>
+              </Link>
+            )
+          })}
         </div>
+
       ) : (
         // C. Empty state
         <div className="flex flex-col items-center justify-center py-16 px-4 border-2 border-dashed border-gray-200 rounded-2xl bg-gray-50">

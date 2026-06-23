@@ -13,7 +13,7 @@ export const createReview = async (req, res) => {
     // 🔥 FIXED: Frontend ko bhejne se pehle author ko populate karein
     await newReview.populate("author");
     res.json({ review: newReview })
-    console.log('review', newReview)
+
     // .save() method is used for if we can any change make in the existing database.
 }
 

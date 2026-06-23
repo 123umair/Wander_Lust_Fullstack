@@ -6,14 +6,14 @@ const port = process.env.PORT || 4000;
 const app = express()
 import { ExpressError } from './utils/ExpressError.js'
 const frontendOrigin = process.env.FRONTEND_URL;
- if (!frontendOrigin) {
-     throw new Error("FRONTEND_URL is required for CORS configuration");
+if (!frontendOrigin) {
+  throw new Error("FRONTEND_URL is required for CORS configuration");
 }
- app.use(cors({ origin: frontendOrigin , credentials:true})); 
+app.use(cors({ origin: frontendOrigin, credentials: true }));
 
 app.use(express.json())
-app.use(express.urlencoded({extended:true}))
- // means that if any type of data that are urlencoded formate then this middleware easily parse these data inside the req.body for understand the data
+app.use(express.urlencoded({ extended: true }))
+// means that if any type of data that are urlencoded formate then this middleware easily parse these data inside the req.body for understand the data
 import { connectDB } from './src/config/db.js'
 import listingRoutes from "./src/routes/listingRoutes.js";
 import reviewRoutes from './src/routes/reviewsRoutes.js'
@@ -25,18 +25,18 @@ import userRoutes from './src/routes/userRoutes.js'
 
 
 const sessionOptions = {
-  secret:"mysecretcode",
-  resave:false,
-  saveUninitialized:false,
-  cookie:{
+  secret: "mysecretcode",
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
     expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
-    maxAge: 7 * 24 * 60 *60 * 1000,
-    httpOnly:true, // prevent cross-scripting attack // my cookie is expires after the 7 days .
-    secure:false,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    httpOnly: true, // prevent cross-scripting attack // my cookie is expires after the 7 days .
+    secure: false,
   }
 }
 app.use(session(sessionOptions))
- 
+
 app.use(passport.initialize())
 app.use(passport.session()) // we can use the session also for passport initialization and the the passport.session() is used if when a user will login at first time then its can't be again login for every request in a single session.
 passport.use(new LocalStrategy(User.authenticate())) // means how much users will come then it should be first authenticate through LocalStrategy using the authenticate() method.
@@ -49,27 +49,28 @@ passport.deserializeUser(User.deserializeUser()) // if we will remove all the us
 
 // connect database
 
-const startServer=async()=>{
+const startServer = async () => {
   await connectDB();
-  app.listen(port,()=>{
-   console.log('Server is running on port',port)
+  app.listen(port, () => {
+    console.log('Server is running on port', port)
   })
 }
-startServer().catch((err)=>{
-   console.error("Server Start Up failed:",err.message)
-   process.exit(1)
+startServer().catch((err) => {
+  console.error("Server Start Up failed:", err.message)
+  process.exit(1)
 })
 // this is the parent routes /listings,/listings/:id/reviews this all are parent routes
-app.use('/listings',listingRoutes)
-app.use('/listings/:id/reviews',reviewRoutes)
-app.use('/',userRoutes)
-app.all(`/*splat`,(req,res,next) => {  
-   next(new ExpressError(404,"Page Not Found!"))          // here we created the express error 
-})                            
+app.use('/listings', listingRoutes)
+app.use('/listings/:id/reviews', reviewRoutes)
+app.use('/', userRoutes)
+app.all(`/*splat`, (req, res, next) => {
+  next(new ExpressError(404, "Page Not Found!"))          // here we created the express error 
+})
 
-app.use((err,req,res,next)=>{
+app.use((err, req, res, next) => {
   if (err.name === 'CastError') {
-    return res.status(400).json({ error: 'Invalid ID format' });}
-   let {statusCode=500,message="Something went wrong!"} = err;       // and here the middleware will catch these error .
-    res.status(statusCode).json({ error: message })
+    return res.status(400).json({ error: 'Invalid ID format' });
+  }
+  let { statusCode = 500, message = "Something went wrong!" } = err;       // and here the middleware will catch these error .
+  res.status(statusCode).json({ error: message })
 })

@@ -53,7 +53,7 @@ export const authUser = (req, res) => {
 // Logout User
 
 export const logOutUser = (req, res) => {
-    console.log("Before logout:", req.user);
+
     req.logout((err) => {
         if (err) {
             return res.status(500).json({ message: 'Logout Failed' })

@@ -1,6 +1,6 @@
 import React from 'react'
 import axios from 'axios'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useParams, } from 'react-router-dom'
 import { formSchema } from '../Form/FormSchema'
 import { useForm } from 'react-hook-form'
@@ -11,17 +11,22 @@ import { zodResolver } from '@hookform/resolvers/zod'
 
 const Edit_Listing = () => {
   const API = import.meta.env.VITE_API_URL
-  const { register, formState, handleSubmit, reset } = useForm({ resolver: zodResolver(formSchema) })
+  const { register, formState, handleSubmit, reset, watch } = useForm({ resolver: zodResolver(formSchema) })
   const { errors } = formState
   const { id } = useParams()
   const navigate = useNavigate()
-
+  const [existingImage, setExistingImage] = useState()
+  const selectedImageFile = watch("listing.image")
 
   useEffect(() => {
     const fetchContent = async () => {
       try {
         const res = await axios.get(`${API}/listings/${id}/edit`, { withCredentials: true })
         reset({ listing: res.data.listing })
+        // 
+        if (res.data.listing?.image?.url) {
+          setExistingImage(res.data.listing.image.url)
+        }
       } catch (error) {
         console.log("error", error)
       }
@@ -32,6 +37,14 @@ const Edit_Listing = () => {
   const onSubmit = async (data) => {
 
     try {
+      const formData = new FormData()
+      formData.append('listing[title]', data.listing.title)
+      formData.append('listing[description]', data.listing.description)
+      formData.append('listing[price]', Number(data.listing.price))
+      formData.append('listing[country]', data.listing.country)
+      formData.append('listing[location]', data.listing.location)
+
+
       await axios.patch(`${API}/listings/${id}`, data, { withCredentials: true });
       alert("Listing updated successfully!");
       navigate(`/listings/${id}`);
@@ -51,7 +64,7 @@ const Edit_Listing = () => {
           <p className="text-gray-500 mt-2 text-base">Modify the details of your property below.</p>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6" encType='multipart/form-data'>
           {/* Title */}
           <div>
             <label htmlFor="title" className="block text-sm font-semibold text-gray-800">Title</label>
@@ -81,20 +94,53 @@ const Edit_Listing = () => {
             {errors.listing?.description && <p className='text-red-600'>{errors.listing.description.message}</p>}
 
           </div>
+          {/* Image URL / Upload Field */}
+          <div>
+            <label htmlFor="image" className="block text-sm font-semibold text-gray-800">
+              Property Image
+            </label>
 
+            {/* 📸 IMAGE PREVIEW BOX */}
+            <div className="mt-2 mb-4 flex items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-4 bg-gray-50">
+              {selectedImageFile && selectedImageFile.length > 0 ? (
+
+                <div className="text-center">
+                  <p className="text-xs text-green-600 font-semibold mb-1">New Image Preview:</p>
+                  <img
+                    src={URL.createObjectURL(selectedImageFile[0])}
+                    alt="New Preview"
+                    className="h-40 w-full object-cover rounded-md shadow-sm"
+                  />
+                </div>
+              ) : existingImage ? (
+                // Agar nayi image select nahi ki, to Cloudinary wali purani image dikhao
+                <div className="text-center">
+                  <p className="text-xs text-gray-500 font-semibold mb-1">Current Image:</p>
+                  <img
+                    src={existingImage}
+                    alt="Current Listing"
+                    className="h-40 w-full object-cover rounded-md shadow-sm"
+                  />
+                </div>
+              ) : (
+                // Agar dono me se kuch nahi hai (Fallback)
+                <p className="text-sm text-gray-400">No image available</p>
+              )}
+            </div>
+          </div>
           {/* Image URL */}
           <div>
-            <label htmlFor="image" className="block text-sm font-semibold text-gray-800">Image URL</label>
+            <label htmlFor="image" className="block text-sm font-semibold text-gray-800">Upload a new Image</label>
             <input
 
-
+              type='file'
               id="image"
-              {...register("listing.image.url")}
-              // value={update.image?.url || ""}
-              // onChange={(e) => setUpdate({ ...update, image: { ...update.image, url: e.target.value } })}
+              accept="image/*"
+              {...register("listing.image")}
+
               className="mt-1 block w-full px-4 py-3 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#FF5A5F] focus:border-transparent transition-all"
             />
-            {errors.listing?.image?.url && <p className='text-red-600'>{errors.listing.image.url.message}</p>}
+            {errors.listing?.image && <p className='text-red-600'>{errors.listing.image.message}</p>}
 
           </div>
 

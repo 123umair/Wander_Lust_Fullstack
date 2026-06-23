@@ -1,6 +1,8 @@
 {
   "dependencies": {
+    "cloudinary": "^2.10.0",
     "cors": "^2.8.6",
+    "multer-storage-cloudinary": "^4.0.0",
     "react-router": "^7.13.0"
   }
 }

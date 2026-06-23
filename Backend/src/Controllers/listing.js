@@ -3,18 +3,28 @@ import { Listing } from "../Models/Listing.js";
 // index listings 
 export const indexListing = async (req, res) => {
 
-    const allListings = await Listing.find({});
+    const allListings = await Listing.find({}).populate("reviews");
     res.json({ allListings });
 }
 
 
 // Create logic
 export const createListing = async (req, res) => {
-    console.log("hitting the routes , req body created", req.body)
-    const newListing = new Listing(req.body.listing);
-    newListing.Owner = req.user._id // save new user information
+    // 1. Extract the data from the Cloudinary.
+    if (!req.file) {
+        return res.status(400).json({ message: 'Image upload is required.' })
+    }
+
+    const url = req.file.path; // cloudinary secure url
+    const filename = req.file.filename // cloudinary public id filename
+    const newListingData = {
+        ...req.body.listing,
+        image: { url, filename },
+        Owner: req.user._id
+    };
+    const newListing = new Listing(newListingData)
     await newListing.save();
-    res.json({ success: true });
+    return res.status(201).json({ success: true });
 }
 
 // show listing
@@ -44,9 +54,22 @@ export const editListing = async (req, res) => {
 
 // update listing (Logic)
 export const updateListing = async (req, res) => {
+
     const { id } = req.params;
-    console.log(req.body, 'request body')
-    await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+    // 1. Update the text content
+    const listing = await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+    if (!listing) {
+        return res.status(404).json({ sucess: false, message: "Listing not found" })
+    }
+    // 2. Only update Cloundinary data if a new image file was selected
+    if (req.file) {
+        const url = req.file.path
+
+        const filename = req.file.filename
+        listing.image = { url, filename }
+        await listing.save()
+    }
+
     res.json({ success: true, message: "Listing Updated Successfully!" });
 }
 

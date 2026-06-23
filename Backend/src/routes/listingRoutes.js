@@ -1,22 +1,13 @@
 import express from "express";
 const router = express.Router();
 import { wrapAsync } from "../../utils/wrapAsync.js";
-import { ExpressError } from "../../utils/ExpressError.js";
-import { listingSchema } from "../../schemas/schema.js";
+import { validateListing } from "../middlewear/validateListing.js";
 import { LoggedIn } from "../middlewear/LoggedIn.js";
+import multer from 'multer';
+import { storage } from "../../cloudConfig.js";
+const upload = multer({ storage });  // now here by this line the multer will stored the file in the cloudinary storage
 
 import { indexListing, showListing, createListing, editListing, updateListing, deleteListing } from "../Controllers/listing.js";
-// validation middleware
-const validateListing = (req, res, next) => {
-  const result = listingSchema.safeParse(req.body);
-  if (!result.success) {
-    const errorMsg = result.error.issues.map((el) => el.message).join(", ");
-    return next(new ExpressError(400, errorMsg));
-  }
-  req.body = result.data;
-  next();
-};
-
 
 
 // Index Route
@@ -28,21 +19,24 @@ router.get(
 // Create Route
 router.post(
   "/create_listing",
-  validateListing,
   LoggedIn,
-  wrapAsync(createListing)
+  upload.single('listing[image]'), // multer add the image in the cloudinary."uplaod" is a multer instance that will connect cloudinary storage and "single()" will tells to express that only one file coming throught the route from the frontend.
+  validateListing,
+  wrapAsync(createListing),
 );
 
 
 router.route("/:id")
   .get(wrapAsync(showListing))
-  .patch(validateListing, LoggedIn, wrapAsync(updateListing))
+  .patch(validateListing, LoggedIn,
+    upload.single('listing[image]'), wrapAsync(updateListing))
   .delete(LoggedIn, wrapAsync(deleteListing))
 
 
 // Edit Route
 router.get(
   "/:id/edit",
+  LoggedIn,
   wrapAsync(editListing)
 );
 

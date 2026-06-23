@@ -5,18 +5,15 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { reviewfromSchema } from './reviewFormSchema.js'
 import { toast } from 'react-toastify'
-
+import { Star, MessageSquare } from 'lucide-react'
 
 
 const Display_Content = ({ user }) => {
   const { id } = useParams()
   const [content, setContent] = useState(null)
   const navigate = useNavigate()
-  console.log("user", user)
+
   const API = import.meta.env.VITE_API_URL
-
-
-  console.log(content, 'content')
 
   useEffect(() => {
     const fetchContent = async () => {
@@ -24,6 +21,7 @@ const Display_Content = ({ user }) => {
         const res = await axios.get(`${API}/listings/${id}`, { withCredentials: true })
         setContent(res.data.listing)
         const data = res.data
+
         if (!data.listing) {
           toast.error(data.message)
           navigate("/")
@@ -57,6 +55,8 @@ const Display_Content = ({ user }) => {
     register,
     handleSubmit,
     reset,
+    setValue, // set the value manually in this form.
+    watch,    // to watch the current selected value live.
     formState: { errors }
   } = useForm({
     resolver: zodResolver(reviewfromSchema),
@@ -98,9 +98,12 @@ const Display_Content = ({ user }) => {
   }
 
   if (!content) return <div className="text-center py-10 text-gray-500">Loading...</div>
+
   const ownerId = content.Owner?._id || content.Owner;
   const isListingOwner = user?._id && ownerId && user._id === ownerId;
-
+  const totalReviews = content.reviews.length || 0
+  const averageRating = totalReviews > 0 ? (content.reviews.reduce((acc, r) => acc + Number(r.rating), 0) / totalReviews).toFixed(1) : 0.0;
+  const currentRating = watch('review.rating')
   return (
     /* Parent padding kam kar di (py-6) */
     <div className="max-w-3xl mx-auto px-4 py-6">
@@ -161,8 +164,8 @@ const Display_Content = ({ user }) => {
               </div>
             </div>
             <div className="flex items-center space-x-1 text-sm font-semibold">
-              <span className="text-[#FF5A5F]">★</span>
-              <span>4.9</span>
+              <span className="text-black">★</span>
+              <span>{averageRating}</span>
             </div>
           </div>
 
@@ -218,10 +221,19 @@ const Display_Content = ({ user }) => {
           <div className='mt-2'>
             <p className='mt-2'>Leave a Review</p>
             <div className='mt-2'>
-              <label htmlFor="rating">Rating</label>
-              <input type="range" min="1" max="5" id='Rating' name='review[rating]' className='cursor-pointer w-full'
-                {...register('review.rating', { valueAsNumber: true })}
-              />
+              <label htmlFor="rating" className='text-sm font-semibold text-gray-700 block mb-2'>Rating</label>
+              <div className='flex items-center gap-1.5'>
+                {[1, 2, 3, 4, 5].map((starValue) => {
+                  return (<button
+                    type='button'
+                    key={starValue}
+                    onClick={() => setValue("review.rating", starValue)}
+                    className='cursor-pointer transition transform active:scale-90'>
+                    <Star
+                      className={`w-6 h-6 ${starValue <= currentRating ? 'text-black fill-current' : 'text-gray-300'}`}></Star>
+                  </button>)
+                })}
+              </div>
             </div>
             <div className='mt-2'>
               <label htmlFor="comment">Comments</label>
@@ -267,9 +279,17 @@ const Display_Content = ({ user }) => {
                     </div>
 
                     {/* Rating */}
-                    <div className="text-[10px] text-black pl-2 pt-2">
-                      ⭐ {review.rating}
+
+                    <div className='flex items-center gap-0.5 pl-2 pt-2'>
+                      {[1, 2, 3, 4, 5].map((starIndex) => (
+                        <Star
+                          key={starIndex}
+                          className={`w-3 h-3 ${starIndex <= Number(review.rating) ? 'text-black fill-current' :
+                            'text-gray-400'}`}
+                        />
+                      ))}
                     </div>
+
                   </div>
 
                   {/* Comment */}

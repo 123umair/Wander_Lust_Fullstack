@@ -28,13 +28,15 @@ router.post(
 
 router.route("/:id")
   .get(wrapAsync(showListing))
-  .patch(validateListing, LoggedIn, wrapAsync(updateListing))
+  .patch(validateListing, LoggedIn,
+    upload.single('listing[image]'), wrapAsync(updateListing))
   .delete(LoggedIn, wrapAsync(deleteListing))
 
 
 // Edit Route
 router.get(
   "/:id/edit",
+  LoggedIn,
   wrapAsync(editListing)
 );
 

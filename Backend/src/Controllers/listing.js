@@ -54,9 +54,22 @@ export const editListing = async (req, res) => {
 
 // update listing (Logic)
 export const updateListing = async (req, res) => {
+
     const { id } = req.params;
-    console.log(req.body, 'request body')
-    await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+    // 1. Update the text content
+    const listing = await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+    if (!listing) {
+        return res.status(404).json({ sucess: false, message: "Listing not found" })
+    }
+    // 2. Only update Cloundinary data if a new image file was selected
+    if (req.file) {
+        const url = req.file.path
+
+        const filename = req.file.filename
+        listing.image = { url, filename }
+        await listing.save()
+    }
+
     res.json({ success: true, message: "Listing Updated Successfully!" });
 }
 

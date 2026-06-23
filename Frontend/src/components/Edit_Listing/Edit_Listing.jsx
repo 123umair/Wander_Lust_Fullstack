@@ -32,6 +32,14 @@ const Edit_Listing = () => {
   const onSubmit = async (data) => {
 
     try {
+      const formData = new FormData()
+      formData.append('listing[title]', data.listing.title)
+      formData.append('listing[description]', data.listing.description)
+      formData.append('listing[price]', Number(data.listing.price))
+      formData.append('listing[country]', data.listing.country)
+      formData.append('listing[location]', data.listing.location)
+
+
       await axios.patch(`${API}/listings/${id}`, data, { withCredentials: true });
       alert("Listing updated successfully!");
       navigate(`/listings/${id}`);
@@ -51,7 +59,7 @@ const Edit_Listing = () => {
           <p className="text-gray-500 mt-2 text-base">Modify the details of your property below.</p>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6" encType='multipart/form-data'>
           {/* Title */}
           <div>
             <label htmlFor="title" className="block text-sm font-semibold text-gray-800">Title</label>
@@ -87,14 +95,14 @@ const Edit_Listing = () => {
             <label htmlFor="image" className="block text-sm font-semibold text-gray-800">Image URL</label>
             <input
 
-
+              type='file'
               id="image"
-              {...register("listing.image.url")}
-              // value={update.image?.url || ""}
-              // onChange={(e) => setUpdate({ ...update, image: { ...update.image, url: e.target.value } })}
+              accept="image/*"
+              {...register("listing.image")}
+
               className="mt-1 block w-full px-4 py-3 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#FF5A5F] focus:border-transparent transition-all"
             />
-            {errors.listing?.image?.url && <p className='text-red-600'>{errors.listing.image.url.message}</p>}
+            {errors.listing?.image && <p className='text-red-600'>{errors.listing.image.message}</p>}
 
           </div>
 

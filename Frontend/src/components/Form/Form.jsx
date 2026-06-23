@@ -9,7 +9,7 @@ const Form = () => {
   const API = import.meta.env.VITE_API_URL
   const onSubmit = async (data) => {
     try {
-      console.log('data', data)
+
       const formData = new FormData()  // a special object instance of the browser that allow raw files binary (images/videos) with plan text.
       //append the text fields
       formData.append('listing[title]', data.listing.title)

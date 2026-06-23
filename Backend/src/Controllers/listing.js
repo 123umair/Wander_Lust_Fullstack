@@ -1,5 +1,5 @@
 import { Listing } from "../Models/Listing.js";
-
+import axios from 'axios'
 // index listings 
 export const indexListing = async (req, res) => {
 
@@ -15,11 +15,33 @@ export const createListing = async (req, res) => {
         return res.status(400).json({ message: 'Image upload is required.' })
     }
 
+    // Default empty geometry data
+    let lat = null;
+    let lng = null;
+
+    // 🌟 NEW: Create ke waqt hi coordinates fetch karo
+    if (req.body.listing && req.body.listing.location) {
+        try {
+            const geoUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(req.body.listing.location)}&limit=1`;
+            const geoResponse = await axios.get(geoUrl, {
+                headers: { "User-Agent": "WanderlustApp/1.0" }
+            });
+
+            if (geoResponse.data && geoResponse.data.length > 0) {
+                lat = parseFloat(geoResponse.data[0].lat);
+                lng = parseFloat(geoResponse.data[0].lon);
+            }
+        } catch (geoErr) {
+            console.log("Geocoding failed during creation:", geoErr.message);
+        }
+    }
+
     const url = req.file.path; // cloudinary secure url
     const filename = req.file.filename // cloudinary public id filename
     const newListingData = {
         ...req.body.listing,
         image: { url, filename },
+        geometry: { lat, lng },
         Owner: req.user._id
     };
     const newListing = new Listing(newListingData)
@@ -56,15 +78,15 @@ export const editListing = async (req, res) => {
 export const updateListing = async (req, res) => {
 
     const { id } = req.params;
-    // 1. Update the text content
-    const listing = await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+
+    const listing = await Listing.findByIdAndUpdate(id, { ...req.body.listing })
     if (!listing) {
-        return res.status(404).json({ sucess: false, message: "Listing not found" })
+        return req.status(404).json({ success: false, message: "Listing not found" })
     }
-    // 2. Only update Cloundinary data if a new image file was selected
+
+    // Only update Cloundinary data if a new image file was selected
     if (req.file) {
         const url = req.file.path
-
         const filename = req.file.filename
         listing.image = { url, filename }
         await listing.save()

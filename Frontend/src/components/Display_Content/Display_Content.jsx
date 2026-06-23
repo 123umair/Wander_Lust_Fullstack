@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form'
 import { reviewfromSchema } from './reviewFormSchema.js'
 import { toast } from 'react-toastify'
 import { Star, MessageSquare } from 'lucide-react'
+import WanderlustMap from '../Map/WanderlustMap.jsx'
 
 
 const Display_Content = ({ user }) => {
@@ -176,6 +177,15 @@ const Display_Content = ({ user }) => {
             <p className="text-gray-600 text-sm leading-snug">
               {content.description}
             </p>
+          </div>
+          {/* 🌟 NEW: Add Leaflet Map Here */}
+          <div className="mb-6">
+            <h3 className="text-md font-bold text-gray-900 mb-2">Where you'll be</h3>
+            <WanderlustMap
+              lat={content.geometry?.lat}
+              lng={content.geometry?.lng}
+              locationName={content.location}
+            />
           </div>
 
           {/* Price aur Buttons area ko compact kiya */}

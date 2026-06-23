@@ -103,7 +103,7 @@ const Edit_Listing = () => {
             {/* 📸 IMAGE PREVIEW BOX */}
             <div className="mt-2 mb-4 flex items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-4 bg-gray-50">
               {selectedImageFile && selectedImageFile.length > 0 ? (
-                // Agar user ne koi nayi image select ki hai, to uska preview dikhao
+
                 <div className="text-center">
                   <p className="text-xs text-green-600 font-semibold mb-1">New Image Preview:</p>
                   <img

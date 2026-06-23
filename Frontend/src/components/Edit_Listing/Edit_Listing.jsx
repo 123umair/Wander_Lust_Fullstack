@@ -1,6 +1,6 @@
 import React from 'react'
 import axios from 'axios'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useParams, } from 'react-router-dom'
 import { formSchema } from '../Form/FormSchema'
 import { useForm } from 'react-hook-form'
@@ -11,17 +11,22 @@ import { zodResolver } from '@hookform/resolvers/zod'
 
 const Edit_Listing = () => {
   const API = import.meta.env.VITE_API_URL
-  const { register, formState, handleSubmit, reset } = useForm({ resolver: zodResolver(formSchema) })
+  const { register, formState, handleSubmit, reset, watch } = useForm({ resolver: zodResolver(formSchema) })
   const { errors } = formState
   const { id } = useParams()
   const navigate = useNavigate()
-
+  const [existingImage, setExistingImage] = useState()
+  const selectedImageFile = watch("listing.image")
 
   useEffect(() => {
     const fetchContent = async () => {
       try {
         const res = await axios.get(`${API}/listings/${id}/edit`, { withCredentials: true })
         reset({ listing: res.data.listing })
+        // 
+        if (res.data.listing?.image?.url) {
+          setExistingImage(res.data.listing.image.url)
+        }
       } catch (error) {
         console.log("error", error)
       }
@@ -89,10 +94,43 @@ const Edit_Listing = () => {
             {errors.listing?.description && <p className='text-red-600'>{errors.listing.description.message}</p>}
 
           </div>
+          {/* Image URL / Upload Field */}
+          <div>
+            <label htmlFor="image" className="block text-sm font-semibold text-gray-800">
+              Property Image
+            </label>
 
+            {/* 📸 IMAGE PREVIEW BOX */}
+            <div className="mt-2 mb-4 flex items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-4 bg-gray-50">
+              {selectedImageFile && selectedImageFile.length > 0 ? (
+                // Agar user ne koi nayi image select ki hai, to uska preview dikhao
+                <div className="text-center">
+                  <p className="text-xs text-green-600 font-semibold mb-1">New Image Preview:</p>
+                  <img
+                    src={URL.createObjectURL(selectedImageFile[0])}
+                    alt="New Preview"
+                    className="h-40 w-full object-cover rounded-md shadow-sm"
+                  />
+                </div>
+              ) : existingImage ? (
+                // Agar nayi image select nahi ki, to Cloudinary wali purani image dikhao
+                <div className="text-center">
+                  <p className="text-xs text-gray-500 font-semibold mb-1">Current Image:</p>
+                  <img
+                    src={existingImage}
+                    alt="Current Listing"
+                    className="h-40 w-full object-cover rounded-md shadow-sm"
+                  />
+                </div>
+              ) : (
+                // Agar dono me se kuch nahi hai (Fallback)
+                <p className="text-sm text-gray-400">No image available</p>
+              )}
+            </div>
+          </div>
           {/* Image URL */}
           <div>
-            <label htmlFor="image" className="block text-sm font-semibold text-gray-800">Image URL</label>
+            <label htmlFor="image" className="block text-sm font-semibold text-gray-800">Upload a new Image</label>
             <input
 
               type='file'

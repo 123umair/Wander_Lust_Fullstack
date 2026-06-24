@@ -7,6 +7,7 @@ import { reviewfromSchema } from './reviewFormSchema.js'
 import { toast } from 'react-toastify'
 import { Star, MessageSquare } from 'lucide-react'
 import WanderlustMap from '../Map/WanderlustMap.jsx'
+import { es } from 'zod/v4/locales'
 
 
 const Display_Content = ({ user }) => {
@@ -21,6 +22,7 @@ const Display_Content = ({ user }) => {
       try {
         const res = await axios.get(`${API}/listings/${id}`, { withCredentials: true })
         setContent(res.data.listing)
+        console.log(res.data.listing, 'data')
         const data = res.data
 
         if (!data.listing) {

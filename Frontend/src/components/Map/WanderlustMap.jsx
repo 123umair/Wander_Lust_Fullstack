@@ -1,43 +1,70 @@
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'; // 🔥 Added useMap
 import L from 'leaflet';
-import 'leaflet/dist/leaflet.css'; //
-// 1. Manually import the assets so Webpack/Vite bundles them correctly
+import 'leaflet/dist/leaflet.css';
+import { useEffect } from 'react';
+
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 
-// 2. Re-configure the default icon object of Leaflet
 let DefaultIcon = L.icon({
     iconUrl: markerIcon,
     shadowUrl: markerShadow,
-    iconSize: [25, 41],     // Width and height of the icon in pixels
-    iconAnchor: [12, 41],   // The point of the icon which will correspond to marker's location
-    popupAnchor: [1, -34]   // The point from which the popup should open relative to the iconAnchor
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34]
 });
-
 L.Marker.prototype.options.icon = DefaultIcon;
+
+// 🌟 NEW: Custom Sub-Component to change map view dynamically when coordinates change
+const ChangeMapCenter = ({ center }) => {
+    const map = useMap();
+    useEffect(() => {
+        if (center[0] && center[1]) {
+            map.flyTo(center, 13, {
+                animate: true,
+                duration: 1.5 // Smooth animation like Airbnb!
+            });
+        }
+    }, [center, map]);
+    return null;
+};
+
 const WanderlustMap = ({ lat, lng, locationName }) => {
     if (!lat || !lng) {
         return (
-            <div className='p-4 bg-gray-50 text-center rounded-xl text-xs text-gray-400 font-medium'>
-                No spatial coordinates available to render.
+            <div className='p-4 bg-gray-50 text-center rounded-xl text-xs text-gray-400 font-medium border border-dashed'>
+                No spatial coordinates available to render map for this location.
             </div>
-        )
+        );
     }
+
+    const currentPosition = [lat, lng];
+
     return (
-        <div className='w-full h-64 rounded-xl overflow-hidden border border-gray-200 z-0 relative'>
-            <MapContainer center={[lat, lng]} zoom={13} className='h-full w-full' >
+        <div className='w-full h-64 rounded-xl overflow-hidden border border-gray-200 z-0 relative shadow-sm'>
+            <MapContainer
+                center={currentPosition}
+                zoom={13}
+                className='h-full w-full'
+                scrollWheelZoom={false} // Prevents annoying page scroll jumps
+            >
                 <TileLayer
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    ttribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 />
-                <Marker position={[lat, lng]}>
+
+                {/* 🌟 Dynamic Center Control trigger */}
+                <ChangeMapCenter center={currentPosition} />
+
+                <Marker position={currentPosition}>
                     <Popup>
-                        <span className='font-medium text-xs text-gray-800'>{locationName || "Property Point"}</span>
+                        <div className='font-semibold text-sm text-gray-900'>{locationName || "Property Point"}</div>
+                        <p className='text-xs text-gray-500 m-0'>Exact location after booking</p>
                     </Popup>
                 </Marker>
             </MapContainer>
         </div>
-    )
-}
+    );
+};
 
-export default WanderlustMap
+export default WanderlustMap;

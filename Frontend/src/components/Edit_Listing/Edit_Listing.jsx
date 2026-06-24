@@ -17,10 +17,6 @@ const Edit_Listing = () => {
   const navigate = useNavigate()
   const [existingImage, setExistingImage] = useState()
   const selectedImageFile = watch("listing.image")
-  // const watchedLocation = watch("listing.location")
-
-  const [mapCoords, setMapCoords] = useState({ lat: null, lng: null })
-
 
   useEffect(() => {
     const fetchContent = async () => {
@@ -33,13 +29,6 @@ const Edit_Listing = () => {
         }
 
 
-        // // Fetch Coordinates data from DB
-        // if (res.data.listing?.geometry?.lat && res.data.listing?.geometry?.lng) {
-        //   setMapCoords({
-        //     lat: res.data.listing.geometry.lat,
-        //     lng: res.data.listing.geometry.lng
-        //   })
-        // }
       } catch (error) {
         console.log("error", error)
       }
@@ -201,15 +190,7 @@ const Edit_Listing = () => {
             {errors.listing?.location && <p className='text-red-600'>{errors.listing.location.message}</p>}
           </div>
 
-          {/*
-          <div className="mt-8 pt-4 border-t border-gray-100">
-            <label className="block text-sm font-semibold text-gray-800 mb-2">Registered Location View</label>
-            <WanderlustMap
-              lat={mapCoords.lat}
-              lng={mapCoords.lng}
-              locationName={watchedLocation}
-            />
-          </div> */}
+
 
           {/* Update Button: Airbnb Red Theme */}
           <div className="pt-2">

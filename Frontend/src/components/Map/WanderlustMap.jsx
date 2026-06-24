@@ -15,14 +15,14 @@ let DefaultIcon = L.icon({
 });
 L.Marker.prototype.options.icon = DefaultIcon;
 
-// 🌟 NEW: Custom Sub-Component to change map view dynamically when coordinates change
+// NEW: Custom Sub-Component to change map view dynamically when coordinates change
 const ChangeMapCenter = ({ center }) => {
     const map = useMap();
     useEffect(() => {
         if (center[0] && center[1]) {
             map.flyTo(center, 13, {
                 animate: true,
-                duration: 1.5 // Smooth animation like Airbnb!
+                duration: 1.5
             });
         }
     }, [center, map]);

@@ -2,7 +2,7 @@ import React from 'react'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { useParams, } from 'react-router-dom'
-import { formSchema } from '../Form/FormSchema'
+import { editFormSchema } from '../Form/FormSchema'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -11,7 +11,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 
 const Edit_Listing = () => {
   const API = import.meta.env.VITE_API_URL
-  const { register, formState, handleSubmit, reset, watch } = useForm({ resolver: zodResolver(formSchema) })
+  const { register, formState, handleSubmit, reset, watch } = useForm({ resolver: zodResolver(editFormSchema) })
   const { errors } = formState
   const { id } = useParams()
   const navigate = useNavigate()
@@ -46,8 +46,11 @@ const Edit_Listing = () => {
       formData.append('listing[country]', data.listing.country)
       formData.append('listing[location]', data.listing.location)
 
-
-      await axios.patch(`${API}/listings/${id}`, data, { withCredentials: true });
+      // 🔥 2. FIXED: Nayi file ko append karne ka logic jo aap bhool gaye the
+      if (data.listing.image instanceof FileList && data.listing.image.length > 0) {
+        formData.append('listing[image]', data.listing.image[0])
+      }
+      await axios.patch(`${API}/listings/${id}`, formData, { withCredentials: true });
       alert("Listing updated successfully!");
       navigate(`/listings/${id}`);
     } catch (error) {
@@ -104,8 +107,7 @@ const Edit_Listing = () => {
 
             {/* 📸 IMAGE PREVIEW BOX */}
             <div className="mt-2 mb-4 flex items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-4 bg-gray-50">
-              {selectedImageFile && selectedImageFile.length > 0 ? (
-
+              {selectedImageFile && selectedImageFile instanceof FileList && selectedImageFile.length > 0 ? (
                 <div className="text-center">
                   <p className="text-xs text-green-600 font-semibold mb-1">New Image Preview:</p>
                   <img
@@ -115,6 +117,7 @@ const Edit_Listing = () => {
                   />
                 </div>
               ) : existingImage ? (
+                // ... baki components same rahenge : existingImage ? (
                 // Agar nayi image select nahi ki, to Cloudinary wali purani image dikhao
                 <div className="text-center">
                   <p className="text-xs text-gray-500 font-semibold mb-1">Current Image:</p>

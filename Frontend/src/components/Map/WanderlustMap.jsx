@@ -29,39 +29,33 @@ const ChangeMapCenter = ({ center }) => {
     return null;
 };
 
-const WanderlustMap = ({ lat, lng, locationName }) => {
-    if (!lat || !lng) {
-        return (
-            <div className='p-4 bg-gray-50 text-center rounded-xl text-xs text-gray-400 font-medium border border-dashed'>
-                No spatial coordinates available to render map for this location.
-            </div>
-        );
-    }
+const WanderlustMap = ({ geometry, location }) => {
+    console.log(geometry, 'geometry')
+    // 🚨 GeoJSON Validation Check: Coordinates exist karte hain ya nahi?
+    const hasCoordinates = geometry && geometry.coordinates && geometry.coordinates.length === 2;
 
-    const currentPosition = [lat, lng];
+
+    // 🔥 GeoJSON mein coordinates [lng, lat] hote hain, lekin Leaflet ko [lat, lng] chahiye!
+    const position = hasCoordinates
+        ? [geometry.coordinates[1], geometry.coordinates[0]] // [Latitude, Longitude]
+        : [33.6844, 73.0479]; // Fallback coordinates (Islamabad)
+
+
 
     return (
-        <div className='w-full h-64 rounded-xl overflow-hidden border border-gray-200 z-0 relative shadow-sm'>
-            <MapContainer
-                center={currentPosition}
-                zoom={13}
-                className='h-full w-full'
-                scrollWheelZoom={false} // Prevents annoying page scroll jumps
-            >
+        <div className="w-full h-[400px] rounded-xl overflow-hidden shadow-md border border-gray-200 mt-6">
+            <MapContainer center={position} zoom={13} scrollWheelZoom={false} className="h-full w-full">
                 <TileLayer
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-
-                {/* 🌟 Dynamic Center Control trigger */}
-                <ChangeMapCenter center={currentPosition} />
-
-                <Marker position={currentPosition}>
-                    <Popup>
-                        <div className='font-semibold text-sm text-gray-900'>{locationName || "Property Point"}</div>
-                        <p className='text-xs text-gray-500 m-0'>Exact location after booking</p>
-                    </Popup>
-                </Marker>
+                {hasCoordinates && (
+                    <Marker position={position}>
+                        <Popup>
+                            <span className="font-semibold">{location || "Exact Location"}</span>
+                        </Popup>
+                    </Marker>
+                )}
             </MapContainer>
         </div>
     );

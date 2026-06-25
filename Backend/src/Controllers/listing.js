@@ -50,7 +50,10 @@ export const createListing = async (req, res) => {
     const newListingData = {
         ...req.body.listing,
         image: { url, filename },
-        geometry: { lat, lng },
+        geometry: {
+            type: "Point",
+            coordinates: [lng, lat]
+        },
         Owner: req.user._id
     };
     const newListing = new Listing(newListingData)
@@ -114,9 +117,13 @@ export const updateListing = async (req, res) => {
             });
 
             if (geoResponse.data && geoResponse.data.length > 0) {
+
+                const lat = parseFloat(geoResponse.data[0].lat)
+                const lng = parseFloat(geoResponse.data[0].lon)
+
                 updateData.geometry = {
-                    lat: parseFloat(geoResponse.data[0].lat),
-                    lng: parseFloat(geoResponse.data[0].lon)
+                    type: "Point",
+                    coordinates: [lng, lat] // [Longitude, Latitude] schema ke mutabik
                 };
             }
         } catch (geoErr) {
@@ -126,7 +133,7 @@ export const updateListing = async (req, res) => {
 
     // 3. DATABASE UPDATE: Pehle text aur map coordinates ko update karein
     // { new: true } lagane se hume updated document wapas milega
-    const listing = await Listing.findByIdAndUpdate(id, updateData, { new: true });
+    const listing = await Listing.findByIdAndUpdate(id, updateData,);
 
     if (!listing) {
         return res.status(404).json({ success: false, message: "Listing not found" });

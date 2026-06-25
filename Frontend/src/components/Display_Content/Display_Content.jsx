@@ -7,7 +7,7 @@ import { reviewfromSchema } from './reviewFormSchema.js'
 import { toast } from 'react-toastify'
 import { Star, MessageSquare } from 'lucide-react'
 import WanderlustMap from '../Map/WanderlustMap.jsx'
-import { es } from 'zod/v4/locales'
+
 
 
 const Display_Content = ({ user }) => {
@@ -180,14 +180,13 @@ const Display_Content = ({ user }) => {
               {content.description}
             </p>
           </div>
-          {/* 🌟 NEW: Add Leaflet Map Here */}
-          <div className="mb-6">
-            <h3 className="text-md font-bold text-gray-900 mb-2">Where you'll be</h3>
-            <WanderlustMap
-              lat={content.geometry?.lat}
-              lng={content.geometry?.lng}
-              locationName={content.location}
-            />
+          {/* 🗺️ MAP IMPLEMENTATION SECTION */}
+          <div className="mt-8">
+            <h3 className="text-xl font-bold text-gray-800 mb-2">Where you'll be</h3>
+            <p className="text-gray-500 mb-4">{content.location}, {content.country}</p>
+
+            {/* Map pass data according to your point schema */}
+            <WanderlustMap geometry={content.geometry} location={content.location} />
           </div>
 
           {/* Price aur Buttons area ko compact kiya */}

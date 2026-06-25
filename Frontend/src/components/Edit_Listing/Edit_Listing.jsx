@@ -6,8 +6,7 @@ import { editFormSchema } from '../Form/FormSchema'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { zodResolver } from '@hookform/resolvers/zod'
-// import WanderlustMap from '../Map/WanderlustMap'
-
+import { Loader2 } from 'lucide-react'
 
 const Edit_Listing = () => {
   const API = import.meta.env.VITE_API_URL
@@ -17,10 +16,11 @@ const Edit_Listing = () => {
   const navigate = useNavigate()
   const [existingImage, setExistingImage] = useState()
   const selectedImageFile = watch("listing.image")
-
+  const [isLoading, setIsLoading] = useState(false)
   useEffect(() => {
     const fetchContent = async () => {
       try {
+
         const res = await axios.get(`${API}/listings/${id}/edit`, { withCredentials: true })
         reset({ listing: res.data.listing })
         // 
@@ -32,12 +32,13 @@ const Edit_Listing = () => {
       } catch (error) {
         console.log("error", error)
       }
+
     }
     fetchContent()
   }, [id, reset])
 
   const onSubmit = async (data) => {
-
+    setIsLoading(true)
     try {
       const formData = new FormData()
       formData.append('listing[title]', data.listing.title)
@@ -55,6 +56,9 @@ const Edit_Listing = () => {
       navigate(`/listings/${id}`);
     } catch (error) {
       console.log(error);
+    }
+    finally {
+      setIsLoading(false)
     }
   }
 
@@ -196,12 +200,25 @@ const Edit_Listing = () => {
 
 
           {/* Update Button: Airbnb Red Theme */}
+          {/* Update Button: Airbnb Red Theme */}
           <div className="pt-2">
             <button
               type="submit"
-              className="w-full flex justify-center py-3.5 px-4 border border-transparent rounded-lg shadow-md text-lg font-bold text-white bg-[#FF5A5F] hover:bg-[#E31C5F] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FF5A5F] transition-all transform active:scale-95"
+              disabled={isLoading}
+              className={`w-full flex justify-center py-3.5 px-4 border border-transparent rounded-lg shadow-md text-lg font-bold text-white transition-all transform active:scale-95 ${isLoading
+                ? 'bg-gray-400 cursor-not-allowed'
+                : 'bg-[#FF5A5F] hover:bg-[#E31C5F] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FF5A5F]'
+                }`}
             >
-              Update Listing
+              {isLoading ? (
+                <span className='flex items-center gap-2'>
+                  {/* ✅ Spelling fixed: animate-spin */}
+                  <Loader2 className='animate-spin h-5 w-5 text-white' />
+                  Updating...
+                </span>
+              ) : (
+                "Update Listing"
+              )}
             </button>
           </div>
         </form>

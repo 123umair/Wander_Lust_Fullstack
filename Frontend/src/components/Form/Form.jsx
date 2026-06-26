@@ -53,7 +53,7 @@ const Form = () => {
         return
       }
     } catch (error) {
-      console.log("Message:", error.message)
+      console.error("Message:", error.response?.data || error.message)
       toast.error("Something went wrong during upload.")
     } finally {
       setIsLoading(false) // 🔥 Kaam khatam (Chaahe success ho ya error), loading band

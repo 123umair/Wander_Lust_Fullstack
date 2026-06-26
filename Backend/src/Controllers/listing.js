@@ -133,7 +133,7 @@ export const updateListing = async (req, res) => {
 
     // 3. DATABASE UPDATE: Pehle text aur map coordinates ko update karein
     // { new: true } lagane se hume updated document wapas milega
-    const listing = await Listing.findByIdAndUpdate(id, updateData,);
+    const listing = await Listing.findByIdAndUpdate(id, updateData, { new: true });
 
     if (!listing) {
         return res.status(404).json({ success: false, message: "Listing not found" });

@@ -3,13 +3,26 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { Navigate, useNavigate } from 'react-router'
 import { toast } from 'react-toastify'
+import { Loader2 } from 'lucide-react';
+import { useState } from 'react'
 import axios from 'axios'
+
+
+
 const Form = () => {
+
+
+  const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
   const API = import.meta.env.VITE_API_URL
+
+
+
+
+
   const onSubmit = async (data) => {
     try {
-
+      setIsLoading(true)
       const formData = new FormData()  // a special object instance of the browser that allow raw files binary (images/videos) with plan text.
       //append the text fields
       formData.append('listing[title]', data.listing.title)
@@ -40,10 +53,15 @@ const Form = () => {
         return
       }
     } catch (error) {
-      console.log("Message:", error.message)
-
+      console.error("Message:", error.response?.data || error.message)
+      toast.error("Something went wrong during upload.")
+    } finally {
+      setIsLoading(false) // 🔥 Kaam khatam (Chaahe success ho ya error), loading band
     }
+
+
   }
+
   const { register, handleSubmit, formState } = useForm({ resolver: zodResolver(formSchema) })
   const { errors } = formState
   return (
@@ -148,9 +166,20 @@ const Form = () => {
           <div className="pt-2">
             <button
               type="submit"
-              className="w-full flex justify-center py-3.5 px-4 border border-transparent rounded-lg shadow-md text-lg font-bold text-white bg-[#FF5A5F] hover:bg-[#E31C5F] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FF5A5F] transition-all transform active:scale-95"
-            >
-              Add Listing
+              disabled={isLoading} // 🔥 Uploading ke dauran button disabled rahega
+              className={`w-full flex justify-center py-3.5 px-4 border border-transparent rounded-lg shadow-md text-lg font-bold text-white bg-[#FF5A5F] hover:bg-[#E31C5F] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FF5A5F] transition-all transform active:scale-95"
+            ${isLoading ? 'bg-gray-400 cursor-not-allowed'
+                  : 'bg-[#FF5A5F] hover:bg-[#E31C5F] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FF5A5F]'
+                }`}>
+              {isLoading ? (
+                <span className="flex items-center gap-2">
+                  {/* Lucide Spinner Icon */}
+                  <Loader2 className="animate-spin h-5 w-5 text-white" />
+                  Uploading Image...
+                </span>
+              ) : (
+                "Add Listing"
+              )}
             </button>
 
           </div>

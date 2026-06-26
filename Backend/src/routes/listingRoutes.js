@@ -28,8 +28,8 @@ router.post(
 
 router.route("/:id")
   .get(wrapAsync(showListing))
-  .patch(validateListing, LoggedIn,
-    upload.single('listing[image]'), wrapAsync(updateListing))
+  .patch(LoggedIn,
+    upload.single('listing[image]'), validateListing, wrapAsync(updateListing))
   .delete(LoggedIn, wrapAsync(deleteListing))
 
 

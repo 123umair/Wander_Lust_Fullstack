@@ -6,6 +6,8 @@ import { useForm } from 'react-hook-form'
 import { reviewfromSchema } from './reviewFormSchema.js'
 import { toast } from 'react-toastify'
 import { Star, MessageSquare } from 'lucide-react'
+import WanderlustMap from '../Map/WanderlustMap.jsx'
+
 
 
 const Display_Content = ({ user }) => {
@@ -20,6 +22,7 @@ const Display_Content = ({ user }) => {
       try {
         const res = await axios.get(`${API}/listings/${id}`, { withCredentials: true })
         setContent(res.data.listing)
+        console.log(res.data.listing, 'data')
         const data = res.data
 
         if (!data.listing) {
@@ -176,6 +179,14 @@ const Display_Content = ({ user }) => {
             <p className="text-gray-600 text-sm leading-snug">
               {content.description}
             </p>
+          </div>
+          {/* 🗺️ MAP IMPLEMENTATION SECTION */}
+          <div className="mt-8">
+            <h3 className="text-xl font-bold text-gray-800 mb-2">Where you'll be</h3>
+            <p className="text-gray-500 mb-4">{content.location}, {content.country}</p>
+
+            {/* Map pass data according to your point schema */}
+            <WanderlustMap geometry={content.geometry} location={content.location} />
           </div>
 
           {/* Price aur Buttons area ko compact kiya */}

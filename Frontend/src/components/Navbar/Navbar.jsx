@@ -70,16 +70,22 @@ const Navbar = ({ user, setUser }) => {
                 ) :
                   (<>
                     <NavLink
+                      to="/"
+                      className={({ isActive }) => isActive ? `text-[#FF5A5F] border-b border-[#FF5A5F] pb-1 transition-all duration-100` : normalStyle}
+                    >
+                      Airbnb your home
+                    </NavLink>
+                    <NavLink
                       to="/signup"
                       className={({ isActive }) => isActive ? activeStyle : normalStyle}
                     >
-                      SignUP
+                      Signup
                     </NavLink>
                     <NavLink
                       to="/login"
                       className={({ isActive }) => isActive ? activeStyle : normalStyle}
                     >
-                      login
+                      Login
                     </NavLink>
                   </>)
 
@@ -144,7 +150,7 @@ const Navbar = ({ user, setUser }) => {
                   onClick={() => setIsOpen(false)}
                   className={({ isActive }) => `block px-4 py-3 rounded-xl text-base font-semibold transition-all ${isActive ? 'bg-[#FF5A5F] text-white shadow-md' : 'text-gray-700 hover:bg-white hover:text-[#FF5A5F]'}`}
                 >
-                  SignUP
+                  Signup
                 </NavLink>
                 <NavLink
                   to="/login"

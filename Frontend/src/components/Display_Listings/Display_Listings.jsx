@@ -2,11 +2,32 @@ import React from 'react'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
+// 🔥 Icons import kiye
+import {
+  Bed, Palmtree, Waves, Tent, Flame, Castle,
+  Tv, Snowflake, Key, Compass,
+} from 'lucide-react'
 
 const Display_Listings = () => {
+  const [selectedCategory, setSelectedCategory] = useState(null)
+
   const API = import.meta.env.VITE_API_URL
   const [fetchdata, setfetchData] = useState([])
-  const [loading, setLoading] = useState(true) // Ek loading state taake data aane se pehle empty message na dikhe
+  const [loading, setLoading] = useState(true)
+
+  // 🔥 Airbnb categories list mock
+  const categories = [
+    { name: "Trending", icon: Flame },
+    { name: "Amazing pools", icon: Waves },
+    { name: "Rooms", icon: Bed },
+    { name: "Camping", icon: Tent },
+    { name: "Castles", icon: Castle },
+    { name: "Tropical", icon: Palmtree },
+    { name: "Arctic", icon: Snowflake },
+    { name: "New", icon: Key },
+    { name: "Design", icon: Compass },
+    { name: "Cabins", icon: Tv },
+  ];
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -16,28 +37,62 @@ const Display_Listings = () => {
       } catch (error) {
         console.log("Fetch error:", error)
       } finally {
-        setLoading(false) // Data fetch hone ke baad loading false kar dein
+        setLoading(false)
       }
     }
     fetchPost()
   }, [API])
 
+  const filterData = selectedCategory ? fetchdata.filter((item) => item.category === selectedCategory) : fetchdata
+  console.log(filterData, 'filterdata')
+  const handleCategoryClick = (categoryName) => {
+    if (selectedCategory === categoryName) {
+      setSelectedCategory(null)
+    }
+    else {
+      setSelectedCategory(categoryName)
+    }
+
+  }
+
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* 1. First Heading */}
-      <h1 className="text-3xl font-bold text-gray-900 mb-6">Listing Details</h1>
 
-      {/* CONDITIONAL RENDERING LOGIC */}
+      {/* 🗺️ Jaha par heading thi, waha ab sirf ye Categories Bar hai */}
+      <div className="flex items-center justify-center space-x-8 overflow-x-auto pb-4 mb-6 border-b border-gray-100 scrollbar-none">
+        {categories.map((cat, idx) => {
+          const IconComponent = cat.icon;
+          const isSelected = selectedCategory === cat.name
+          return (
+            <div
+              onClick={() => {
+                handleCategoryClick(cat.name)
+              }}
+              key={idx}
+              className={`flex flex-col items-center space-y-2 pb-2 border-b-2 min-w-[60px] cursor-pointer transition-all ${isSelected
+                ? 'border-gray-900 text-gray-900 font-semibold'
+                : 'border-transparent text-gray-500 hover:text-gray-900 hover:border-gray-200'
+                }`}
+            >
+              <IconComponent className="h-6 w-6 stroke-[1.6]" />
+              <span className="text-xs tracking-tight whitespace-nowrap">{cat.name}</span>
+
+            </div>
+          )
+        })}
+      </div>
+
+      {/* CONDITIONAL RENDERING LOGIC (Baki Sab Kuch Bilkul Unchanged Hai) */}
       {loading ? (
         // A. Agar data load ho raha hai
-        <div className="text-center py-12 <p>{item.Owner} sdfsdfsd</p> text-gray-500 font-medium">
+        <div className="text-center py-12 text-gray-500 font-medium">
           Loading listings...
         </div>
-      ) : fetchdata.length > 0 ? (
+      ) : filterData.length > 0 ? (
         // B. If listing is available
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {fetchdata.map((item) => {
+          {filterData.map((item) => {
             const reviewsArray = item?.reviews || [];
             const totalReviews = reviewsArray.length || 0
             const averageRating = totalReviews > 0 ?
@@ -51,7 +106,7 @@ const Display_Listings = () => {
                 <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-white">
                   <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300 z-10"></div>
                   <img
-                    src={item.image?.url || "https://images.unsplash.com/photo-1501785888041-af3ef285b470"}
+                    src={item.image?.url}
                     alt={item.title}
                     className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
                   />
@@ -89,6 +144,12 @@ const Display_Listings = () => {
           <h3 className="text-lg font-semibold text-gray-900 mb-1">No Listings Available</h3>
           <p className="text-gray-500 text-sm text-center max-w-sm mb-5">
             Looks like there are no listings active right now. Be the first one to host and add a new listing!
+          </p>
+          <h3 className="text-lg font-semibold text-gray-900 mb-1">No Listings Found</h3>
+          <p className="text-gray-500 text-sm text-center max-w-sm mb-5">
+            {selectedCategory
+              ? `Currently, there are no available properties listed under the "${selectedCategory}" category.`
+              : "Looks like there are no listings active right now."}
           </p>
           <Link
             to="/listings/create_listing"

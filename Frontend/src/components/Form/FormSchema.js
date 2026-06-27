@@ -8,7 +8,14 @@ export const formSchema = z.object({
       .refine((files) => files.length > 0, 'Please upload an image'),
     price: z.number().min(1, "enter the Price."),
     country: z.string().min(1, "country required."),
-    location: z.string().min(1, 'enter location')
+    location: z.string().min(1, 'enter location'),
+    // 🔥 Category validation added
+    category: z.enum([
+      "Trending", "Amazing pools", "Rooms", "Camping",
+      "Castles", "Tropical", "Arctic", "New", "Design", "Cabins"
+    ], {
+      errorMap: () => ({ message: "Please select a valid category" })
+    }),
   })
 })
 

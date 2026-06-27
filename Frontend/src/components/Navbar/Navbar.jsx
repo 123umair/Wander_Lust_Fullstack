@@ -141,7 +141,7 @@ const Navbar = ({ user, setUser }) => {
                 onClick={logedOut}
                 className="px-4 py-3 text-gray-600 hover:text-[#FF5A5F] font-medium transition-all duration-300 cursor-pointer"
               >
-                logout
+                Logout
               </button>
             ) :
               <>
@@ -150,14 +150,14 @@ const Navbar = ({ user, setUser }) => {
                   onClick={() => setIsOpen(false)}
                   className={({ isActive }) => `block px-4 py-3 rounded-xl text-base font-semibold transition-all ${isActive ? 'bg-[#FF5A5F] text-white shadow-md' : 'text-gray-700 hover:bg-white hover:text-[#FF5A5F]'}`}
                 >
-                  Signup
+                  Sign up
                 </NavLink>
                 <NavLink
                   to="/login"
                   onClick={() => setIsOpen(false)}
                   className={({ isActive }) => `block px-4 py-3 rounded-xl text-base font-semibold transition-all ${isActive ? 'bg-[#FF5A5F] text-white shadow-md' : 'text-gray-700 hover:bg-white hover:text-[#FF5A5F]'}`}
                 >
-                  SignIn
+                  Login
                 </NavLink>
               </>
 

@@ -70,7 +70,7 @@ const Display_Listings = () => {
                 handleCategoryClick(cat.name)
               }}
               key={idx}
-              className={`flex flex-col items-center space-y-2 pb-2 border-b-2 min-w-[60px] cursor-pointer transition-all ${isSelected
+              className={`flex flex-col items-center space-y-2 pb-2 border-b-2 min-w-15 cursor-pointer transition-all ${isSelected
                 ? 'border-gray-900 text-gray-900 font-semibold'
                 : 'border-transparent text-gray-500 hover:text-gray-900 hover:border-gray-200'
                 }`}

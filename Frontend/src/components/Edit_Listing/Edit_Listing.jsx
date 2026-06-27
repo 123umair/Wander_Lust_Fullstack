@@ -17,6 +17,12 @@ const Edit_Listing = () => {
   const [existingImage, setExistingImage] = useState()
   const selectedImageFile = watch("listing.image")
   const [isLoading, setIsLoading] = useState(false)
+
+  const categoryOptions = [
+    "Trending", "Amazing pools", "Rooms", "Camping",
+    "Castles", "Tropical", "Arctic", "New", "Design", "Cabins"
+  ];
+
   useEffect(() => {
     const fetchContent = async () => {
       try {
@@ -46,7 +52,7 @@ const Edit_Listing = () => {
       formData.append('listing[price]', Number(data.listing.price))
       formData.append('listing[country]', data.listing.country)
       formData.append('listing[location]', data.listing.location)
-
+      formData.append('listing[category]', data.listing.category)
       // 🔥 2. FIXED: Nayi file ko append karne ka logic jo aap bhool gaye the
       if (data.listing.image instanceof FileList && data.listing.image.length > 0) {
         formData.append('listing[image]', data.listing.image[0])
@@ -103,6 +109,22 @@ const Edit_Listing = () => {
             {errors.listing?.description && <p className='text-red-600'>{errors.listing.description.message}</p>}
 
           </div>
+          {/* 🔥 NEW: Category Select Dropdown */}
+          <div>
+            <label htmlFor="category" className="block text-sm font-semibold text-gray-800">Category</label>
+            <select
+              id="category"
+              {...register('listing.category')}
+              className="mt-1 block w-full px-4 py-3 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#FF5A5F] focus:border-transparent transition-all text-gray-700 cursor-pointer"
+            >
+              <option value="">Select a category</option>
+              {categoryOptions.map((cat) => (
+                <option key={cat} value={cat}>{cat}</option>
+              ))}
+            </select>
+            {errors.listing?.category && <p className='text-red-600 text-sm mt-1'>{errors.listing.category.message}</p>}
+          </div>
+
           {/* Image URL / Upload Field */}
           <div>
             <label htmlFor="image" className="block text-sm font-semibold text-gray-800">

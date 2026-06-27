@@ -36,8 +36,7 @@ const Form = () => {
       formData.append('listing[price]', Number(data.listing.price))
       formData.append('listing[country]', data.listing.country)
       formData.append('listing[location]', data.listing.location)
-      // 🔥 YAHAN CHECK KAREIN: Kya data.listing.category mein value aa rahi hai?
-      console.log("Frontend selected category state:", data.listing.category)
+
       // Category data append 
       formData.append('listing[category]', data.listing.category)
 
@@ -45,9 +44,7 @@ const Form = () => {
       if (data.listing.image && data.listing.image[0]) {
         formData.append('listing[image]', data.listing.image[0])
       }
-      for (const pair of formData.entries()) {
-        console.log(pair[0], pair[1]);
-      }
+
 
       const res = await axios.post(`${API}/listings/create_listing`, formData, {
         withCredentials: true,

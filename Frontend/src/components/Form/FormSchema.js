@@ -31,6 +31,13 @@ export const editFormSchema = z.object({
     price: z.number().min(1, "Price must be greater than 0"),
     location: z.string().min(1, "Location is required"),
     country: z.string().min(1, "Country is required"),
+    // 🔥 Category validation added
+    category: z.enum([
+      "Trending", "Amazing pools", "Rooms", "Camping",
+      "Castles", "Tropical", "Arctic", "New", "Design", "Cabins"
+    ], {
+      errorMap: () => ({ message: "Please select a valid category" })
+    }),
 
     // ✅ FIX: Yeh check karega FileList ho, Empty ho, ya fir purana Image Object ho
     image: z.custom((val) => {

@@ -103,6 +103,7 @@ export const updateListing = async (req, res) => {
         price: Number(req.body.listing.price) || 0,
         location: req.body.listing.location,
         country: req.body.listing.country,
+        category: req.body.listing.category
     };
 
     // 2. GEOMETRY/MAP LOGIC: Jab user location edit karega

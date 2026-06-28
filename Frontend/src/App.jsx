@@ -3,9 +3,8 @@ import { Suspense, lazy, useEffect, useState } from 'react'
 import Navbar from './components/Navbar/Navbar'
 import { Routes, Route } from 'react-router-dom'
 import axios from 'axios'
-import { LoaderCircle } from 'lucide-react';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute'
-
+import Loading from './components/Loading/Loading'
 const Footer = lazy(() => import("./components/Footer/Footer"))
 const Display_Listings = lazy(() => import('./components/Display_Listings/Display_Listings'))
 const Display_Content = lazy(() => import('./components/Display_Content/Display_Content'))
@@ -38,15 +37,18 @@ function App() {
     };
     userChecked();
   }, [API]);
-
-  if (loading) return <h2 style={{ textAlign: 'center', marginTop: '2rem' }}>  <LoaderCircle></LoaderCircle></h2>;
-
+  if (loading)
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Loading className="w-12 h-12 animate-spin text-blue-500" text="Checking authentication...." />
+      </div>
+    );
   return (
     <div className="app-container">
       {/* 1. Navbar ko direct props pass kiya */}
       <Navbar user={user} setUser={setUser} />
 
-      <Suspense fallback={<h2>Loading page...</h2>}>
+      <Suspense fallback={<Loading text='Loading page...' />}>
         <main className="main-content">
           <Routes>
             {/* Public Routes */}

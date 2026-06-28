@@ -1,5 +1,5 @@
 import React from 'react'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
 import {
@@ -7,6 +7,7 @@ import {
   Tv, Snowflake, Key, Compass,
 } from 'lucide-react'
 import { useHorizontalScroll } from '../hooks/useHorizontalScroll'
+import Loading from '../Loading/Loading'
 const Display_Listings = () => {
   const [selectedCategory, setSelectedCategory] = useState(null)
 
@@ -78,7 +79,7 @@ const Display_Listings = () => {
                 <div
                   onClick={() => handleCategoryClick(cat.name)}
                   key={idx}
-                  className={`flex flex-col items-center space-y-1.5 pb-2 border-b-2 min-w-[70px] sm:min-w-[80px] 
+                  className={`flex flex-col items-center space-y-1.5 pb-2 border-b-2 min-w-17.5 sm:min-w-20 
               cursor-pointer transition-all dynamic-touch-action select-none ${isSelected
                       ? 'border-gray-900 text-gray-900 font-semibold'
                       : 'border-transparent text-gray-500 hover:text-gray-900 hover:border-gray-200'
@@ -116,8 +117,8 @@ const Display_Listings = () => {
 
       {/* CONDITIONAL RENDERING LOGIC */}
       {loading ? (
-        <div className="text-center py-12 text-gray-500 font-medium">
-          Loading listings...
+        <div className="text-center py-12 text-gray-500 font-medium ">
+          <Loading className="w-12 h-12 animate-spin text-blue-600" text="all listings...." />
         </div>
       ) : filterData.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">

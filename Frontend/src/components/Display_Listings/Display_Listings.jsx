@@ -8,7 +8,13 @@ import {
 } from 'lucide-react'
 import { useHorizontalScroll } from '../hooks/useHorizontalScroll'
 import Loading from '../Loading/Loading'
-const Display_Listings = () => {
+
+
+
+
+
+
+const Display_Listings = ({ searchQuery, setSearchQuery }) => {
   const [selectedCategory, setSelectedCategory] = useState(null)
 
 
@@ -37,7 +43,11 @@ const Display_Listings = () => {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const res = await axios.get(`${API}/listings`, { withCredentials: true })
+        let url = `${API}/listings`;
+        if (searchQuery) {
+          url += `?country=${searchQuery}&location=${searchQuery}`
+        }
+        const res = await axios.get(url, { withCredentials: true })
         setfetchData(res.data.allListings || [])
       } catch (error) {
         console.log("Fetch error:", error)
@@ -45,8 +55,15 @@ const Display_Listings = () => {
         setLoading(false)
       }
     }
-    fetchPost()
-  }, [API])
+
+    const delayDebounce = setTimeout(() => {
+      fetchPost()
+    }, 450) // 450ms typing execution margin 
+    return () => clearTimeout(delayDebounce)
+  }, [searchQuery, API]) //  if changes occured in the searchQuery or API call the timer will be reset
+
+
+
 
   const filterData = selectedCategory ? fetchdata.filter((item) => item.category === selectedCategory) : fetchdata
 

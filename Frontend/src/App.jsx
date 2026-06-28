@@ -16,6 +16,7 @@ import Form from './components/Form/Form'
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
   const API = import.meta.env.VITE_API_URL;
 
   // REFRESH PAR SESSION ZINDA RAKHNE KE LIYE
@@ -46,13 +47,13 @@ function App() {
   return (
     <div className="app-container">
       {/* 1. Navbar ko direct props pass kiya */}
-      <Navbar user={user} setUser={setUser} />
+      <Navbar user={user} setUser={setUser} searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
 
       <Suspense fallback={<Loading text='Loading page...' />}>
         <main className="main-content">
           <Routes>
             {/* Public Routes */}
-            <Route path="/" element={<Display_Listings />} />
+            <Route path="/" element={<Display_Listings searchQuery={searchQuery} setSearchQuery={setSearchQuery} />} />
             <Route path="/listings/:id" element={<Display_Content user={user} />} />
             {/* <Route path="/listings/create_listing" element={<Form />} /> */}
             {/* <Route path="/listings/:id/edit" element={<Edit_Listing />} /> */}

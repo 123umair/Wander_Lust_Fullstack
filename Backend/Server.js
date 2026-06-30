@@ -19,14 +19,29 @@ import { connectDB } from './src/config/db.js'
 import listingRoutes from "./src/routes/listingRoutes.js";
 import reviewRoutes from './src/routes/reviewsRoutes.js'
 import session from 'express-session'
+import mongoStore, { MongoStore } from 'connect-mongo'
 import passport from 'passport'
 import LocalStrategy from 'passport-local'
 import { User } from './src/Models/user.js';
 import userRoutes from './src/routes/userRoutes.js'
 
+const store = MongoStore.create(
+  mongoUrl = process.env.ATLASDB_URL,
+  {
+    crypto: {
+      secret: process.env.SECRET
+    },
+    touchAfter: 24 * 3600
+  }
+)
+
+store.on('error', () => {
+  console.log('ERROR in MONGO SESSION STORE', err)
+})
 
 const sessionOptions = {
-  secret: "mysecretcode",
+  store: store,
+  secret: process.env.SECRET,
   resave: false,
   saveUninitialized: false,
   cookie: {
@@ -34,7 +49,8 @@ const sessionOptions = {
     maxAge: 7 * 24 * 60 * 60 * 1000,
     httpOnly: true, // prevent cross-scripting attack // my cookie is expires after the 7 days .
     secure: false,
-  }
+  },
+
 }
 app.use(session(sessionOptions))
 

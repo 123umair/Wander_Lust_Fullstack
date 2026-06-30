@@ -26,12 +26,14 @@ import { User } from './src/Models/user.js';
 import userRoutes from './src/routes/userRoutes.js'
 
 const store = MongoStore.create(
-  mongoUrl : process.env.ATLASDB_URL,
   {
+    mongoUrl: process.env.ATLASDB_URL,
+
     crypto: {
       secret: process.env.SECRET
     },
     touchAfter: 24 * 3600
+
   }
 )
 

@@ -32,10 +32,10 @@ const Footer = () => {
             <div className="flex items-center space-x-4 font-semibold">
               <button className="flex items-center hover:underline">
                 <Globe className="w-4 h-4 mr-2" />
-                English (IN)
+                English (US)
               </button>
               <button className="flex items-center hover:underline">
-                ₹ INR
+                $ USD
               </button>
             </div>
 

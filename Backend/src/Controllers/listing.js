@@ -1,10 +1,29 @@
 import { Listing } from "../Models/Listing.js";
 import axios from 'axios'
+
+
+
+
+
 // index listings 
 export const indexListing = async (req, res) => {
 
-    const allListings = await Listing.find({}).populate("reviews");
-    res.json({ allListings });
+    try {
+        const { country } = req.query;
+        let filterQuery = {}
+        // build condition searchparameters
+        if (country && country.trim() !== "") {
+            filterQuery.$or = [
+                { country: { $regex: country, $options: "i" } },  // 1. Check if matches country
+                { location: { $regex: country, $options: "i" } } // 2. Check if matches location
+            ];
+        }
+        const allListings = await Listing.find(filterQuery).populate("reviews");
+        res.status(200).json({ allListings });
+    } catch (error) {
+        res.status(500).json({ error: "Internal Database System Error" })
+    }
+
 }
 
 
@@ -103,6 +122,7 @@ export const updateListing = async (req, res) => {
         price: Number(req.body.listing.price) || 0,
         location: req.body.listing.location,
         country: req.body.listing.country,
+        category: req.body.listing.category
     };
 
     // 2. GEOMETRY/MAP LOGIC: Jab user location edit karega

@@ -5,7 +5,7 @@ import logo from '../../assets/logo.png';
 import axios from 'axios'
 
 
-const Navbar = ({ user, setUser }) => {
+const Navbar = ({ user, setUser, searchQuery, setSearchQuery }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const API = import.meta.env.VITE_API_URL
@@ -57,6 +57,28 @@ const Navbar = ({ user, setUser }) => {
 
 
             </div>
+            {/* Center Side Grid Area */}
+            <div className="hidden md:flex justify-center items-center">
+              <div className="flex items-center border border-gray-200 rounded-full py-1.5 pl-4 pr-2 shadow-sm hover:shadow-md transition-all duration-200 bg-white w-full max-w-[320px] lg:max-w-[380px]">
+
+                {/* The Magical Native Input element connected to state */}
+                <input
+                  type="text"
+                  placeholder="Search country (e.g. Pakistan, Italy)..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)} // Catch real-time characters
+                  className="w-full text-xs font-semibold text-gray-800 bg-transparent border-none outline-none placeholder-gray-400 pl-2 pr-2"
+                />
+
+                <div className="bg-[#FF5A5F] p-2 rounded-full text-white hover:bg-[#e04f54] transition-all duration-200 shadow-sm flex-shrink-0 cursor-pointer">
+                  {/* Search Glass Icon Vector Here */}
+                  <svg className="h-3.5 w-3.5 stroke-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </div>
+
+              </div>
+            </div>
             <div className=' hidden md:flex  items-center justify-center space-x-8'>
               {
                 user ? (
@@ -70,16 +92,22 @@ const Navbar = ({ user, setUser }) => {
                 ) :
                   (<>
                     <NavLink
+                      to="/"
+                      className={({ isActive }) => isActive ? `text-[#FF5A5F] border-b border-[#FF5A5F] pb-1 transition-all duration-100` : normalStyle}
+                    >
+                      Airbnb your home
+                    </NavLink>
+                    <NavLink
                       to="/signup"
                       className={({ isActive }) => isActive ? activeStyle : normalStyle}
                     >
-                      SignUP
+                      Signup
                     </NavLink>
                     <NavLink
                       to="/login"
                       className={({ isActive }) => isActive ? activeStyle : normalStyle}
                     >
-                      login
+                      Login
                     </NavLink>
                   </>)
 
@@ -112,6 +140,22 @@ const Navbar = ({ user, setUser }) => {
           }`}
       >
         <div className="px-4 py-4 space-y-2 bg-gray-50">
+
+          <div className="flex items-center border border-gray-200 rounded-xl py-2 px-3 shadow-xs bg-white focus-within:border-[#FF5A5F] transition-all">
+            <svg className="h-4 w-4 text-[#FF5A5F] flex-shrink-0 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input
+              type="text"
+              placeholder="Where to? Search country..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full text-sm font-medium text-gray-800 bg-transparent border-none outline-none placeholder-gray-400"
+            />
+          </div>
+
+
+
           <NavLink
             to="/"
             onClick={() => setIsOpen(false)}
@@ -135,7 +179,7 @@ const Navbar = ({ user, setUser }) => {
                 onClick={logedOut}
                 className="px-4 py-3 text-gray-600 hover:text-[#FF5A5F] font-medium transition-all duration-300 cursor-pointer"
               >
-                logout
+                Logout
               </button>
             ) :
               <>
@@ -144,14 +188,14 @@ const Navbar = ({ user, setUser }) => {
                   onClick={() => setIsOpen(false)}
                   className={({ isActive }) => `block px-4 py-3 rounded-xl text-base font-semibold transition-all ${isActive ? 'bg-[#FF5A5F] text-white shadow-md' : 'text-gray-700 hover:bg-white hover:text-[#FF5A5F]'}`}
                 >
-                  SignUP
+                  Sign up
                 </NavLink>
                 <NavLink
                   to="/login"
                   onClick={() => setIsOpen(false)}
                   className={({ isActive }) => `block px-4 py-3 rounded-xl text-base font-semibold transition-all ${isActive ? 'bg-[#FF5A5F] text-white shadow-md' : 'text-gray-700 hover:bg-white hover:text-[#FF5A5F]'}`}
                 >
-                  SignIn
+                  Login
                 </NavLink>
               </>
 

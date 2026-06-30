@@ -2,17 +2,30 @@ import { z } from 'zod';
 
 
 export const listingSchema = z.object({
-    listing:z.object({
-        title:z.string(), // required by default
-        description:z.string(),
-       image: z.object({
+    listing: z.object({
+        title: z.string(), // required by default
+        description: z.string(),
+        image: z.object({
             url: z.string().nullable().optional()
         }).optional(), // means image field  will be empty or will in values or its will not include the values means empty..
         price: z.number().min(1, "enter the Price."),
-        country:z.string(), 
-        location:z.string(),
+        country: z.string(),
+        location: z.string(),
+        category: z.enum([
+            "Trending",
+            "Amazing pools",
+            "Rooms",
+            "Camping",
+            "Castles",
+            "Tropical",
+            "Arctic",
+            "New",
+            "Design",
+            "Cabins"
+        ])
+
         // so thsi schema is a serverside validation.
-        
+
     })
 })
 
@@ -20,8 +33,8 @@ export const listingSchema = z.object({
 
 
 export const reviewSchemaValid = z.object({
-   review: z.object({
-      rating: z.number().min(1).max(5),
-      comment: z.string().min(1)
-   })
+    review: z.object({
+        rating: z.number().min(1).max(5),
+        comment: z.string().min(1)
+    })
 });

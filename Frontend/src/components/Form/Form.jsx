@@ -11,7 +11,11 @@ import axios from 'axios'
 
 const Form = () => {
 
-
+  // 🔥 Categories array for dropdown mapping
+  const categoryOptions = [
+    "Trending", "Amazing pools", "Rooms", "Camping",
+    "Castles", "Tropical", "Arctic", "New", "Design", "Cabins"
+  ];
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
   const API = import.meta.env.VITE_API_URL
@@ -22,6 +26,8 @@ const Form = () => {
 
   const onSubmit = async (data) => {
     try {
+      console.log("Complete Data:", data);
+      console.log("Category:", data.listing.category);
       setIsLoading(true)
       const formData = new FormData()  // a special object instance of the browser that allow raw files binary (images/videos) with plan text.
       //append the text fields
@@ -31,12 +37,14 @@ const Form = () => {
       formData.append('listing[country]', data.listing.country)
       formData.append('listing[location]', data.listing.location)
 
+      // Category data append 
+      formData.append('listing[category]', data.listing.category)
 
       // check the image file and add in the formData
       if (data.listing.image && data.listing.image[0]) {
         formData.append('listing[image]', data.listing.image[0])
       }
-      console.log(formData, 'formdata')
+
 
       const res = await axios.post(`${API}/listings/create_listing`, formData, {
         withCredentials: true,
@@ -106,7 +114,21 @@ const Form = () => {
             ></textarea>
             {errors.listing?.description && <p className='text-red-600'>{errors.listing.description.message}</p>}
           </div>
-
+          {/* 🔥 NEW: Category Select Dropdown */}
+          <div>
+            <label htmlFor="category" className="block text-sm font-semibold text-gray-800">Category</label>
+            <select
+              id="category"
+              {...register('listing.category')}
+              className="mt-1 block w-full px-4 py-3 bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#FF5A5F] focus:border-transparent transition-all text-gray-700 cursor-pointer"
+            >
+              <option value="">Select a category</option>
+              {categoryOptions.map((cat) => (
+                <option key={cat} value={cat}>{cat}</option>
+              ))}
+            </select>
+            {errors.listing?.category && <p className='text-red-600 text-sm mt-1'>{errors.listing.category.message}</p>}
+          </div>
 
           {/* Image File Upload Input */}
           <div>

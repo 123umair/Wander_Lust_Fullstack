@@ -7,6 +7,7 @@ const app = express()
 import { ExpressError } from './utils/ExpressError.js'
 
 const frontendOrigin = process.env.FRONTEND_URL;
+console.log("Frontend Origin:", process.env.FRONTEND_URL);
 if (!frontendOrigin) {
   throw new Error("FRONTEND_URL is required for CORS configuration");
 }

@@ -4,7 +4,6 @@ import dotenv from "dotenv";
 dotenv.config();
 const port = process.env.PORT || 4000;
 const app = express()
-app.set("trust proxy", 1); // for production only.
 import { ExpressError } from './utils/ExpressError.js'
 
 const frontendOrigin = process.env.FRONTEND_URL;
@@ -48,18 +47,11 @@ const sessionOptions = {
   secret: process.env.SECRET,
   resave: false,
   saveUninitialized: false,
-  // cookie: {
-  //   expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
-  //   maxAge: 7 * 24 * 60 * 60 * 1000,
-  //   httpOnly: true, // prevent cross-scripting attack // my cookie is expires after the 7 days .
-  //   secure: false,
-  // },
   cookie: {
-    expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-    maxAge: 7 * 24 * 60 * 60 * 1000,                                            // for porduction railway + vercel
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    httpOnly: true, // prevent cross-scripting attack // my cookie is expires after the 7 days .
+    secure: false,
   },
 
 }

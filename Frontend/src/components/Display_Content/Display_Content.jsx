@@ -7,8 +7,7 @@ import { reviewfromSchema } from './reviewFormSchema.js'
 import { toast } from 'react-toastify'
 import { Star, MessageSquare } from 'lucide-react'
 import WanderlustMap from '../Map/WanderlustMap.jsx'
-
-
+import Loading from '../Loading/Loading.jsx'
 
 const Display_Content = ({ user }) => {
   const { id } = useParams()
@@ -100,13 +99,11 @@ const Display_Content = ({ user }) => {
     }
   }
   if (!content)
-    return
-  {
-    <div className="min-h-screen flex items-center justify-center">
-      <p className="text-gray-500 text-lg">Loading...</p>
-    </div>
-
-  }
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loading text={"Loading detail of listing..."} />
+      </div>
+    )
   const ownerId = content?.Owner?._id || content.Owner;
   const isListingOwner = user?._id && ownerId && user._id === ownerId;
   const totalReviews = content.reviews.length || 0

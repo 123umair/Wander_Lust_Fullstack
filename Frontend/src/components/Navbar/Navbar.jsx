@@ -136,7 +136,7 @@ const Navbar = ({ user, setUser, searchQuery, setSearchQuery }) => {
 
       {/* Animated Mobile Menu */}
       <div
-        className={`md:hidden overflow-hidden transition-all duration-500 ease-in-out ${isOpen ? 'max-h-60 opacity-100 border-t' : 'max-h-0 opacity-0'
+        className={`md:hidden overflow-hidden transition-all duration-500 ease-in-out ${isOpen ? 'max-h-screen opacity-100 border-t' : 'max-h-0 opacity-0'
           }`}
       >
         <div className="px-4 py-4 space-y-2 bg-gray-50">

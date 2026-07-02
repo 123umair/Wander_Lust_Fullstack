@@ -100,7 +100,9 @@ const Display_Content = ({ user }) => {
     }
   }
 
-  if (!content) return <div className="text-center py-10 text-gray-500">Loading...</div>
+  <div className="min-h-screen flex items-center justify-center">
+    <p className="text-gray-500 text-lg">Loading...</p>
+  </div>
 
   const ownerId = content.Owner?._id || content.Owner;
   const isListingOwner = user?._id && ownerId && user._id === ownerId;

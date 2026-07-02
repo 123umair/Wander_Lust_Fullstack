@@ -104,7 +104,7 @@ const Display_Content = ({ user }) => {
     <p className="text-gray-500 text-lg">Loading...</p>
   </div>
 
-  const ownerId = content.Owner?._id || content.Owner;
+  const ownerId = content?.Owner?._id || content.Owner;
   const isListingOwner = user?._id && ownerId && user._id === ownerId;
   const totalReviews = content.reviews.length || 0
   const averageRating = totalReviews > 0 ? (content.reviews.reduce((acc, r) => acc + Number(r.rating), 0) / totalReviews).toFixed(1) : 0.0;
